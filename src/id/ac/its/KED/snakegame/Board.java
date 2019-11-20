@@ -108,9 +108,9 @@ public class Board extends JPanel implements ActionListener {
     private void doDrawing(Graphics g) {					// Drawing the snake
 
         Graphics2D g2d = (Graphics2D) g;
-        drawScore(g2d);
         if (inGame) {
-
+            
+            drawScore(g2d);
             g.drawImage(apple, apple_x, apple_y, this);
 
             for (int z = 0; z < dots; z++) {

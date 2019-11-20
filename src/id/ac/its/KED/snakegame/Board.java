@@ -1,5 +1,6 @@
 package id.ac.its.KED.snakegame;
 
+import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -16,13 +17,16 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Board extends JPanel implements ActionListener {
-
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	private final int B_WIDTH = 500;
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    private final int N_BLOCKS = 20;
+    private final int BLOCK_SIZE = 23;
+    private final int SCREEN_SIZE = N_BLOCKS * BLOCK_SIZE;
+    private final Font smallFont = new Font("Helvetica", Font.BOLD, 15);
+    private final int B_WIDTH = 500;
     private final int B_HEIGHT = 500;
     private final int DOT_SIZE = 10;
     private final int ALL_DOTS = 900;
@@ -47,11 +51,13 @@ public class Board extends JPanel implements ActionListener {
     private Image apple;
     private Image head;
 
+    private int score;
+
     public Board() {
-        
+
         initBoard();
     }
-    
+
     private void initBoard() {
 
         addKeyListener(new TAdapter());
@@ -78,13 +84,14 @@ public class Board extends JPanel implements ActionListener {
 
     private void initGame() {
 
-        dots = 10;
+        score = 0;
+        dots = 3;
 
         for (int z = 0; z < dots; z++) {
             x[z] = 50 - z * 10;
             y[z] = 50;
         }
-        
+
         locateApple();
 
         timer = new Timer(DELAY, this);
@@ -97,9 +104,11 @@ public class Board extends JPanel implements ActionListener {
 
         doDrawing(g);
     }
-    
+
     private void doDrawing(Graphics g) {					// Drawing the snake
-        
+
+        Graphics2D g2d = (Graphics2D) g;
+        drawScore(g2d);
         if (inGame) {
 
             g.drawImage(apple, apple_x, apple_y, this);
@@ -117,33 +126,43 @@ public class Board extends JPanel implements ActionListener {
         } else {
 
             gameOver(g);
-        }        
+        }
+    }
+
+    private void drawScore(Graphics2D g) {
+        int i;
+        String s;
+
+        g.setFont(smallFont);
+        g.setColor(new Color(96,128,255));
+        s = "Score: " + score;
+        g.drawString(s, SCREEN_SIZE / 2 + 170, SCREEN_SIZE + 20);
     }
 
     private void gameOver(Graphics g) {				// Game Over UI
-        
+
         String msg = "Game Over";
-        String msg1 = "Score : " + dots;
+        String msg1 = "Score : " + score;
         Font small = new Font("Helvetica", Font.BOLD, 20);
         FontMetrics metr = getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
         g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
-        
+
         if(dots < 10) {
-        	
-        	g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+
+            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
         }
         else if(dots < 100 && dots > 10 ) {
-        	
-        	g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+
+            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
         }
         else {
-        	
-        	g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+
+            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
         }
-        
+
     }
 
     private void checkApple() {
@@ -151,6 +170,7 @@ public class Board extends JPanel implements ActionListener {
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
 
             dots++;
+            score++;
             locateApple();
         }
     }
@@ -203,7 +223,7 @@ public class Board extends JPanel implements ActionListener {
         if (x[0] < 0) {
             inGame = false;
         }
-        
+
         if (!inGame) {
             timer.stop();
         }
@@ -222,7 +242,7 @@ public class Board extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (inGame) {
-        	
+
             checkApple();
             checkCollision();
             move();

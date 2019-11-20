@@ -39,19 +39,21 @@ public class Board extends JPanel implements ActionListener {
     private int dots;
     private int apple_x;
     private int apple_y;
-
+    private int score;
+    private int gold;							// for spawning golden apple
+    
     private boolean leftDirection = false;
     private boolean rightDirection = true;
     private boolean upDirection = false;
     private boolean downDirection = false;
     private boolean inGame = true;
+    private boolean onfire = false;				// after eating gold apple
 
     private Timer timer;
     private Image ball;
     private Image apple;
+    private Image g_apple;
     private Image head;
-
-    private int score;
 
     public Board() {
 
@@ -78,6 +80,9 @@ public class Board extends JPanel implements ActionListener {
         ImageIcon iia = new ImageIcon("src/resources/apple.png");
         apple = iia.getImage();
 
+        ImageIcon iig = new ImageIcon("src/resources/gold_apple.png");
+        g_apple = iig.getImage();
+        
         ImageIcon iih = new ImageIcon("src/resources/head.png");
         head = iih.getImage();
     }
@@ -86,6 +91,7 @@ public class Board extends JPanel implements ActionListener {
 
         score = 0;
         dots = 3;
+        gold = 5;
 
         for (int z = 0; z < dots; z++) {
             x[z] = 50 - z * 10;
@@ -111,7 +117,15 @@ public class Board extends JPanel implements ActionListener {
         if (inGame) {
             
             drawScore(g2d);
-            g.drawImage(apple, apple_x, apple_y, this);
+            
+            if(dots == gold - 1)
+        	{
+        		g.drawImage(g_apple, apple_x, apple_y, this);
+        	}
+        	else
+        	{
+        		g.drawImage(apple, apple_x, apple_y, this);
+        	}
 
             for (int z = 0; z < dots; z++) {
                 if (z == 0) {
@@ -170,8 +184,24 @@ public class Board extends JPanel implements ActionListener {
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
 
             dots++;
-            score++;
             locateApple();
+            
+            if(dots == gold)	// Gold Apple effect
+            {
+            	score += 10;
+            	gold += 5;
+            	
+            	// onfire = true seharusnya tapi masih cacat di bagian move
+            	onfire = false;	// fire mode after eating golden apple
+            }
+            else				// Normal Apple
+            {
+            	score++;
+            	
+            	onfire = false;
+            }
+//            System.out.println("Dots : " + dots);
+//            System.out.println("Score : " + score);
         }
     }
 
@@ -182,21 +212,38 @@ public class Board extends JPanel implements ActionListener {
             y[z] = y[(z - 1)];
         }
 
-        if (leftDirection) {
-            x[0] -= DOT_SIZE;
+        if(onfire == true)
+        {
+        	System.out.println("OnFire!");
+        	if (leftDirection) {
+        		x[0] -= (2 * DOT_SIZE);
+            }       
+            if (rightDirection) {
+            	x[0] += (2 * DOT_SIZE);
+            }
+            if (upDirection) {
+            	y[0] -= (2 * DOT_SIZE);
+            }
+            if (downDirection) {
+            	y[0] += (2 * DOT_SIZE);
+            }
         }
-
-        if (rightDirection) {
-            x[0] += DOT_SIZE;
-        }
-
-        if (upDirection) {
-            y[0] -= DOT_SIZE;
-        }
-
-        if (downDirection) {
-            y[0] += DOT_SIZE;
-        }
+        else
+        {
+        	System.out.println("Normal");
+        	if (leftDirection) {
+        		x[0] -= DOT_SIZE;
+            }       
+            if (rightDirection) {
+            	x[0] += DOT_SIZE;
+            }
+            if (upDirection) {
+            	y[0] -= DOT_SIZE;
+            }
+            if (downDirection) {
+            	y[0] += DOT_SIZE;
+            }        	
+        }   
     }
 
     private void checkCollision() {

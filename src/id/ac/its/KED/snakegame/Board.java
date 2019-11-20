@@ -1,4 +1,4 @@
-package ac.id.its.KED.SnakeGame;
+package id.ac.its.KED.snakegame;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,12 +15,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import javax.swing.JPanel;
-
 public class Board extends JPanel implements ActionListener {
 
-	private final int B_WIDTH = 300;
-    private final int B_HEIGHT = 300;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private final int B_WIDTH = 500;
+    private final int B_HEIGHT = 500;
     private final int DOT_SIZE = 10;
     private final int ALL_DOTS = 900;
     private final int RAND_POS = 29;
@@ -53,6 +56,7 @@ public class Board extends JPanel implements ActionListener {
 
         addKeyListener(new TAdapter());
         setBackground(Color.black);
+//        setBackground(Color.white);
         setFocusable(true);
 
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
@@ -94,7 +98,7 @@ public class Board extends JPanel implements ActionListener {
         doDrawing(g);
     }
     
-    private void doDrawing(Graphics g) {
+    private void doDrawing(Graphics g) {					// Drawing the snake
         
         if (inGame) {
 
@@ -116,15 +120,30 @@ public class Board extends JPanel implements ActionListener {
         }        
     }
 
-    private void gameOver(Graphics g) {
+    private void gameOver(Graphics g) {				// Game Over UI
         
         String msg = "Game Over";
-        Font small = new Font("Helvetica", Font.BOLD, 14);
+        String msg1 = "Highscore : " + dots;
+        Font small = new Font("Helvetica", Font.BOLD, 20);
         FontMetrics metr = getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
         g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
+        
+        if(dots < 10) {
+        	
+        	g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+        }
+        else if(dots < 100 && dots > 10 ) {
+        	
+        	g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+        }
+        else {
+        	
+        	g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+        }
+        
     }
 
     private void checkApple() {
@@ -203,7 +222,7 @@ public class Board extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (inGame) {
-
+        	
             checkApple();
             checkCollision();
             move();
@@ -217,32 +236,31 @@ public class Board extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e) {
 
-            int key = e.getKeyCode();
+            int key = e.getKeyCode();	// Input Key (Analog)
 
-            if ((key == KeyEvent.VK_LEFT) && (!rightDirection)) {
+            if ((key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && (!rightDirection)) {
                 leftDirection = true;
                 upDirection = false;
                 downDirection = false;
             }
 
-            if ((key == KeyEvent.VK_RIGHT) && (!leftDirection)) {
+            if ((key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && (!leftDirection)) {
                 rightDirection = true;
                 upDirection = false;
                 downDirection = false;
             }
 
-            if ((key == KeyEvent.VK_UP) && (!downDirection)) {
+            if ((key == KeyEvent.VK_UP || key == KeyEvent.VK_W) && (!downDirection)) {
                 upDirection = true;
                 rightDirection = false;
                 leftDirection = false;
             }
 
-            if ((key == KeyEvent.VK_DOWN) && (!upDirection)) {
+            if ((key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && (!upDirection)) {
                 downDirection = true;
                 rightDirection = false;
                 leftDirection = false;
             }
         }
     }
-
 }

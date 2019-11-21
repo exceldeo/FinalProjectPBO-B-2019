@@ -98,7 +98,7 @@ public class Board extends JPanel implements ActionListener {
  
         for (int z = 0; z < dots; z++) {
             x[z] = 50 - z * 10;
-            y[z] = 50;
+            y[z] = 80;
         }
  
         locateApple();
@@ -120,10 +120,10 @@ public class Board extends JPanel implements ActionListener {
         if (inGame) {
  
             g.setColor(Color.white);
-            g.drawRect(0, 0, 498, 430);
+            g.drawRect(0, 70, 498, 430);
  
             g.setColor(Color.LIGHT_GRAY);
-            g.fillRect(0, 431, 499, 69);
+            g.fillRect(0, 0, 499, 69);
  
             drawScore(g2d);
         	drawHealth(g2d);
@@ -157,7 +157,7 @@ public class Board extends JPanel implements ActionListener {
         g.setFont(smallFont);
         g.setColor(new Color(96,128,255));
         s = "Score: " + score;
-        g.drawString(s, SCREEN_SIZE / 25, SCREEN_SIZE + 12);
+        g.drawString(s, SCREEN_SIZE / 25, SCREEN_SIZE /10);
     }
  
     private void drawHealth(Graphics2D g) {
@@ -166,7 +166,7 @@ public class Board extends JPanel implements ActionListener {
         g.setFont(smallFont);
         g.setColor(new Color(96,128,255));
         h = "Health: " + health;
-        g.drawString(h, SCREEN_SIZE / 2, SCREEN_SIZE + 12);
+        g.drawString(h, SCREEN_SIZE / 2, SCREEN_SIZE/10);
     }
  
     private void gameOver(Graphics g) {				// Game Over UI
@@ -278,11 +278,11 @@ public class Board extends JPanel implements ActionListener {
             }
         }
  
-        if (y[0] >= B_HEIGHT - 80) {
+        if (y[0] >= B_HEIGHT) {
             inGame = false;
         }
  
-        if (y[0] < 0) {
+        if (y[0] < 80) {
             inGame = false;
         }
  

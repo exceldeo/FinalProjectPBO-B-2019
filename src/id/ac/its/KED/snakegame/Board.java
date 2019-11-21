@@ -1,5 +1,5 @@
 package id.ac.its.KED.snakegame;
-
+ 
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,17 +15,17 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
+ 
 public class Board extends JPanel implements ActionListener {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-
+ 
     private final int N_BLOCKS = 20;
     private final int BLOCK_SIZE = 23;
     private final int SCREEN_SIZE = N_BLOCKS * BLOCK_SIZE;
-    private final Font smallFont = new Font("Helvetica", Font.BOLD, 15);
+    private final Font smallFont = new Font("Helvetica", Font.BOLD, 25);
     private final int B_WIDTH = 500;
     private final int B_HEIGHT = 500;
     private final int DOT_SIZE = 10;
@@ -33,102 +33,108 @@ public class Board extends JPanel implements ActionListener {
     private final int RAND_POS = 29;
     private final int DELAY = 150;
     private final int SPRINT = 120;
-
+ 
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
-
+ 
     private int dots;
     private int apple_x;
     private int apple_y;
     private int score;
     private int gold;
     private int health;
-
+ 
     private boolean leftDirection = false;
     private boolean rightDirection = true;
     private boolean upDirection = false;
     private boolean downDirection = false;
     private boolean inGame = true;
     private boolean onFire = false;
-
+ 
     private Timer timer;
     private Image ball;
     private Image apple;
     private Image head;
     private Image g_apple;
-
-
+ 
+ 
     public Board() {
-
+ 
         initBoard();
     }
-
+ 
     private void initBoard() {
-
+ 
         addKeyListener(new TAdapter());
         setBackground(Color.black);
         setFocusable(true);
-
+ 
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         loadImages();
         initGame();
     }
-
+ 
     private void loadImages() {
-
+ 
         ImageIcon iid = new ImageIcon("src/resources/dot.png");
         ball = iid.getImage();
-
+ 
         ImageIcon iia = new ImageIcon("src/resources/apple.png");
         apple = iia.getImage();
-
+ 
         ImageIcon iig = new ImageIcon("src/resources/gold_apple.png");
         g_apple = iig.getImage();
-
+ 
         ImageIcon iih = new ImageIcon("src/resources/head.png");
         head = iih.getImage();
     }
-
+ 
     private void initGame() {
-
+ 
         score = 0;
         dots = 3;
         gold = 5;
         health = 300;
-
+ 
         for (int z = 0; z < dots; z++) {
             x[z] = 50 - z * 10;
             y[z] = 50;
         }
-
+ 
         locateApple();
-
+ 
         timer = new Timer(DELAY, this);
         timer.start();
     }
-
+ 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+ 
         doDrawing(g);
     }
-
+ 
     private void doDrawing(Graphics g) {					// Drawing the snake
-
+ 
         Graphics2D g2d = (Graphics2D) g;
         if (inGame) {
-
-        	drawScore(g2d);
+ 
+            g.setColor(Color.white);
+            g.drawRect(0, 0, 498, 430);
+ 
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect(0, 431, 499, 69);
+ 
+            drawScore(g2d);
         	drawHealth(g2d);
-
+ 
             if (dots == gold - 1) {
                 g.drawImage(g_apple, apple_x, apple_y, this);
             }
             else {
                 g.drawImage(apple, apple_x, apple_y, this);
             }
-
+ 
             for (int z = 0; z < dots; z++) {
                 if (z == 0) {
                     g.drawImage(head, x[z], y[z], this);
@@ -136,94 +142,94 @@ public class Board extends JPanel implements ActionListener {
                     g.drawImage(ball, x[z], y[z], this);
                 }
             }
-
+ 
             Toolkit.getDefaultToolkit().sync();
-
+ 
         } else {
-
+ 
             gameOver(g);
         }
     }
-
+ 
     private void drawScore(Graphics2D g) {
         String s;
-
+ 
         g.setFont(smallFont);
         g.setColor(new Color(96,128,255));
         s = "Score: " + score;
-        g.drawString(s, SCREEN_SIZE / 2 + 170, SCREEN_SIZE + 20);
+        g.drawString(s, SCREEN_SIZE / 25, SCREEN_SIZE + 12);
     }
-
+ 
     private void drawHealth(Graphics2D g) {
         String h;
-
+ 
         g.setFont(smallFont);
         g.setColor(new Color(96,128,255));
         h = "Health: " + health;
-        g.drawString(h, SCREEN_SIZE / 2 + 170, SCREEN_SIZE);
+        g.drawString(h, SCREEN_SIZE / 2, SCREEN_SIZE + 12);
     }
-
+ 
     private void gameOver(Graphics g) {				// Game Over UI
-
+ 
         String msg = "Game Over";
         String msg1 = "Score : " + score;
         Font small = new Font("Helvetica", Font.BOLD, 20);
         FontMetrics metr = getFontMetrics(small);
-
+ 
         g.setColor(Color.white);
         g.setFont(small);
         g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
-
+ 
         if(dots < 10) {
-
+ 
             g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
         }
         else if(dots < 100 && dots > 10 ) {
-
+ 
             g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
         }
         else {
-
+ 
             g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
         }
-
+ 
     }
-
+ 
     private void checkApple() {
-
+ 
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
-
+ 
             dots++;
             health += 15;
             locateApple();
-
+ 
             if(dots == gold) {
                 score += 10;
                 gold += 5;
                 health += 20;
                 timer = new Timer(SPRINT, this);
                 timer.start();
-
+ 
                 onFire = true;
             }
             else {
                 score++;
-
+ 
                 onFire = false;
             }
         }
     }
-
+ 
     private void move() {
-
+ 
         for (int z = dots; z > 0; z--) {
             x[z] = x[(z - 1)];
             y[z] = y[(z - 1)];
         }
-
+ 
         if(onFire == true)
         {
-
+ 
             if (leftDirection) {
                 x[0] -= (DOT_SIZE);
             }
@@ -252,7 +258,7 @@ public class Board extends JPanel implements ActionListener {
                 y[0] += DOT_SIZE;
             }
         }
-
+ 
         if(health > 0)		// Setiap move menghabiskan darah player
         {
             health--;
@@ -262,84 +268,84 @@ public class Board extends JPanel implements ActionListener {
             inGame = false;
         }
     }
-
+ 
     private void checkCollision() {
-
+ 
         for (int z = dots; z > 0; z--) {
-
+ 
             if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
                 inGame = false;
             }
         }
-
-        if (y[0] >= B_HEIGHT) {
+ 
+        if (y[0] >= B_HEIGHT - 80) {
             inGame = false;
         }
-
+ 
         if (y[0] < 0) {
             inGame = false;
         }
-
+ 
         if (x[0] >= B_WIDTH) {
             inGame = false;
         }
-
+ 
         if (x[0] < 0) {
             inGame = false;
         }
-
+ 
         if (!inGame) {
             timer.stop();
         }
     }
-
+ 
     private void locateApple() {
-
+ 
         int r = (int) (Math.random() * RAND_POS);
         apple_x = ((r * DOT_SIZE));
-
+ 
         r = (int) (Math.random() * RAND_POS);
         apple_y = ((r * DOT_SIZE));
     }
-
+ 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+ 
         if (inGame) {
-
+ 
             checkApple();
             checkCollision();
             move();
         }
-
+ 
         repaint();
     }
-
+ 
     private class TAdapter extends KeyAdapter {
-
+ 
         @Override
         public void keyPressed(KeyEvent e) {
-
+ 
             int key = e.getKeyCode();	// Input Key (Analog)
-
+ 
             if ((key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && (!rightDirection)) {
                 leftDirection = true;
                 upDirection = false;
                 downDirection = false;
             }
-
+ 
             if ((key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && (!leftDirection)) {
                 rightDirection = true;
                 upDirection = false;
                 downDirection = false;
             }
-
+ 
             if ((key == KeyEvent.VK_UP || key == KeyEvent.VK_W) && (!downDirection)) {
                 upDirection = true;
                 rightDirection = false;
                 leftDirection = false;
             }
-
+ 
             if ((key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && (!upDirection)) {
                 downDirection = true;
                 rightDirection = false;

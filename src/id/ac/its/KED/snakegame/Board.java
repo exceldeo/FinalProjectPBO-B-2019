@@ -41,6 +41,7 @@ public class Board extends JPanel implements ActionListener {
     private int apple_y;
     private int score;
     private int gold;							// for spawning golden apple
+    private int health;
     
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -64,7 +65,6 @@ public class Board extends JPanel implements ActionListener {
 
         addKeyListener(new TAdapter());
         setBackground(Color.black);
-//        setBackground(Color.white);
         setFocusable(true);
 
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
@@ -92,7 +92,8 @@ public class Board extends JPanel implements ActionListener {
         score = 0;
         dots = 3;
         gold = 5;
-
+        health = 100;
+        
         for (int z = 0; z < dots; z++) {
             x[z] = 50 - z * 10;
             y[z] = 50;
@@ -117,6 +118,7 @@ public class Board extends JPanel implements ActionListener {
         if (inGame) {
             
             drawScore(g2d);
+            drawHealth(g2d);
             
             if(dots == gold - 1)
         	{
@@ -144,7 +146,6 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void drawScore(Graphics2D g) {
-        int i;
         String s;
 
         g.setFont(smallFont);
@@ -153,6 +154,15 @@ public class Board extends JPanel implements ActionListener {
         g.drawString(s, SCREEN_SIZE / 2 + 170, SCREEN_SIZE + 20);
     }
 
+    private void drawHealth(Graphics2D g) {
+        String h;
+
+        g.setFont(smallFont);
+        g.setColor(new Color(96,128,255));
+		h = "Health: " + health;
+        g.drawString(h, SCREEN_SIZE / 2 + 170, SCREEN_SIZE);
+    }
+    
     private void gameOver(Graphics g) {				// Game Over UI
 
         String msg = "Game Over";
@@ -214,7 +224,7 @@ public class Board extends JPanel implements ActionListener {
 
         if(onfire == true)
         {
-        	System.out.println("OnFire!");
+//        	System.out.println("OnFire!");
         	if (leftDirection) {
         		x[0] -= (2 * DOT_SIZE);
             }       
@@ -226,11 +236,11 @@ public class Board extends JPanel implements ActionListener {
             }
             if (downDirection) {
             	y[0] += (2 * DOT_SIZE);
-            }
+            }           
         }
         else
         {
-        	System.out.println("Normal");
+//        	System.out.println("Normal");
         	if (leftDirection) {
         		x[0] -= DOT_SIZE;
             }       
@@ -242,8 +252,17 @@ public class Board extends JPanel implements ActionListener {
             }
             if (downDirection) {
             	y[0] += DOT_SIZE;
-            }        	
+            }     
         }   
+        
+        if(health > 0)		// Setiap move menghabiskan darah player
+        {
+        	health--;
+        }
+        else
+        {
+        	inGame = false;
+        }
     }
 
     private void checkCollision() {
@@ -275,7 +294,7 @@ public class Board extends JPanel implements ActionListener {
             timer.stop();
         }
     }
-
+    
     private void locateApple() {
 
         int r = (int) (Math.random() * RAND_POS);

@@ -305,7 +305,7 @@ public class Board extends JPanel implements ActionListener {
         apple_x = ((r * DOT_SIZE));
  
         r = (int) (Math.random() * RAND_POS);
-        apple_y = ((r * DOT_SIZE));
+        apple_y = ((r * DOT_SIZE)+80);
     }
  
     @Override

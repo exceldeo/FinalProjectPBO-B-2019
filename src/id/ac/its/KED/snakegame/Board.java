@@ -12,9 +12,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+import sun.audio.ContinuousAudioDataStream;
  
 public class Board extends JPanel implements ActionListener {
     /**
@@ -57,7 +66,7 @@ public class Board extends JPanel implements ActionListener {
     private Image head;
     private Image g_apple;
     private Image obs;			// buat obstacle
- 
+    
     public Board() {
  
         initBoard();
@@ -71,27 +80,52 @@ public class Board extends JPanel implements ActionListener {
  
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         loadImages();
+        backgroundMusic();
         initGame();
     }
  
     private void loadImages() {
  
-        ImageIcon iid = new ImageIcon("src/resources/dot.png");
+        ImageIcon iid = new ImageIcon("src/resources/images/dot.png");
         ball = iid.getImage();
  
-        ImageIcon iia = new ImageIcon("src/resources/apple.png");
+        ImageIcon iia = new ImageIcon("src/resources/images/apple.png");
         apple = iia.getImage();
  
-        ImageIcon iig = new ImageIcon("src/resources/gold_apple.png");
+        ImageIcon iig = new ImageIcon("src/resources/images/gold_apple.png");
         g_apple = iig.getImage();
  
-        ImageIcon iih = new ImageIcon("src/resources/head.png");
+        ImageIcon iih = new ImageIcon("src/resources/images/head.png");
         head = iih.getImage();
         
-        ImageIcon iio = new ImageIcon("src/resources/obstacle.png");
+        ImageIcon iio = new ImageIcon("src/resources/images/obstacle.png");
         obs = iio.getImage();
     }
  
+    private void backgroundMusic() 
+    {
+    	
+    	AudioPlayer MGP = AudioPlayer.player;
+    	AudioStream BGM;
+    	
+    	ContinuousAudioDataStream loop = null;
+    	
+    	try {
+    		InputStream BGMfile = new FileInputStream("src/resources/music/background.wav");
+            BGM = new AudioStream(BGMfile);
+            AudioPlayer.player.start(BGM);
+    	}
+    	catch(FileNotFoundException e){
+            System.out.print(e.toString());			// file not found
+        }
+        catch(IOException error)
+        {
+            System.out.print(error.toString());
+        }
+    	
+    	MGP.start(loop);
+    }
+    
     private void initGame() {
  
         score = 0;

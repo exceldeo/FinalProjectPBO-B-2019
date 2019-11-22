@@ -56,7 +56,7 @@ public class Board extends JPanel implements ActionListener {
     private Image apple;
     private Image head;
     private Image g_apple;
- 
+    private Image obs;			// buat obstacle
  
     public Board() {
  
@@ -87,6 +87,9 @@ public class Board extends JPanel implements ActionListener {
  
         ImageIcon iih = new ImageIcon("src/resources/head.png");
         head = iih.getImage();
+        
+        ImageIcon iio = new ImageIcon("src/resources/obstacle.png");
+        obs = iio.getImage();
     }
  
     private void initGame() {
@@ -129,16 +132,20 @@ public class Board extends JPanel implements ActionListener {
         	drawHealth(g2d);
  
             if (dots == gold - 1) {
+            	
                 g.drawImage(g_apple, apple_x, apple_y, this);
             }
             else {
+            	
                 g.drawImage(apple, apple_x, apple_y, this);
             }
  
             for (int z = 0; z < dots; z++) {
                 if (z == 0) {
+                	
                     g.drawImage(head, x[z], y[z], this);
                 } else {
+                	
                     g.drawImage(ball, x[z], y[z], this);
                 }
             }
@@ -157,21 +164,34 @@ public class Board extends JPanel implements ActionListener {
         g.setFont(smallFont);
         g.setColor(new Color(96,128,255));
         s = "Score: " + score;
-        g.drawString(s, SCREEN_SIZE / 25, SCREEN_SIZE /10);
+        g.drawString(s, SCREEN_SIZE / 5, SCREEN_SIZE / 10);
     }
  
     private void drawHealth(Graphics2D g) {
         String h;
  
         g.setFont(smallFont);
-        g.setColor(new Color(96,128,255));
+        
+        if (health > 200) {
+        	
+        	g.setColor(new Color(96,128,255));
+        }
+        else if (health > 100 && health <= 200) {
+        	
+        	g.setColor(new Color(255,255,0));
+        }
+        else {
+        	
+        	g.setColor(new Color(255,0,0));
+        }
+        
         h = "Health: " + health;
-        g.drawString(h, SCREEN_SIZE / 2, SCREEN_SIZE/10);
+        g.drawString(h, SCREEN_SIZE / 3 + 100, SCREEN_SIZE / 10);
     }
  
     private void gameOver(Graphics g) {				// Game Over UI
  
-        String msg = "Game Over";
+        String msg = "Game Over !";
         String msg1 = "Score : " + score;
         Font small = new Font("Helvetica", Font.BOLD, 20);
         FontMetrics metr = getFontMetrics(small);
@@ -180,17 +200,17 @@ public class Board extends JPanel implements ActionListener {
         g.setFont(small);
         g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
  
-        if(dots < 10) {
+        if (dots < 10) {
  
             g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
         }
-        else if(dots < 100 && dots > 10 ) {
+        else if (dots < 100 && dots > 10 ) {
  
-            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 5, B_HEIGHT / 2 + 40);
         }
         else {
  
-            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2 + 40);
         }
  
     }
@@ -203,12 +223,14 @@ public class Board extends JPanel implements ActionListener {
             health += 15;
             locateApple();
  
-            if(dots == gold) {
+            if (dots == gold) {
                 score += 10;
                 gold += 5;
                 health += 20;
-                timer = new Timer(SPRINT, this);
-                timer.start();
+                
+                //belum fix
+//                timer = new Timer(SPRINT, this);
+//                timer.start();
  
                 onFire = true;
             }
@@ -227,7 +249,7 @@ public class Board extends JPanel implements ActionListener {
             y[z] = y[(z - 1)];
         }
  
-        if(onFire == true)
+        if (onFire == true)				// belum fix
         {
  
             if (leftDirection) {

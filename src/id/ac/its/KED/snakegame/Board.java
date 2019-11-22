@@ -39,19 +39,23 @@ public class Board extends JPanel implements ActionListener {
     private final int B_HEIGHT = 500;
     private final int DOT_SIZE = 10;
     private final int ALL_DOTS = 900;
-    private final int RAND_POS = 29;
+    private final int RAND_POS = 41;
     private final int DELAY = 150;
-    private final int SPRINT = 120;
+//    private final int SPRINT = 120;
  
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
- 
+    private int obsX[] = new int[10];
+    private int obsY[] = new int[10];
+    
     private int dots;
     private int apple_x;
     private int apple_y;
     private int score;
     private int gold;
     private int health;
+    private int obs_x;
+    private int obs_y;
  
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -65,7 +69,7 @@ public class Board extends JPanel implements ActionListener {
     private Image apple;
     private Image head;
     private Image g_apple;
-    private Image obs;			// buat obstacle
+    private Image obstacle;			
     
     public Board() {
  
@@ -99,7 +103,7 @@ public class Board extends JPanel implements ActionListener {
         head = iih.getImage();
         
         ImageIcon iio = new ImageIcon("src/resources/images/obstacle.png");
-        obs = iio.getImage();
+        obstacle = iio.getImage();
     }
  
     private void backgroundMusic() 
@@ -134,12 +138,20 @@ public class Board extends JPanel implements ActionListener {
         health = 300;
  
         for (int z = 0; z < dots; z++) {
+        	
             x[z] = 50 - z * 10;
             y[z] = 80;
         }
  
+        for (int i = 0; i < 10; i++)
+        {
+        	locateObstacle();
+        	obsX[i] = obs_x;
+            obsY[i] = obs_y;
+        }
+        
         locateApple();
- 
+         
         timer = new Timer(DELAY, this);
         timer.start();
     }
@@ -174,6 +186,14 @@ public class Board extends JPanel implements ActionListener {
                 g.drawImage(apple, apple_x, apple_y, this);
             }
  
+            if(score >= 1)
+            {
+            	for(int a = 0; a < 10; a++)
+            	{
+            		g.drawImage(obstacle, obsX[a], obsY[a], this);
+            	}
+            } 
+            
             for (int z = 0; z < dots; z++) {
                 if (z == 0) {
                 	
@@ -249,33 +269,6 @@ public class Board extends JPanel implements ActionListener {
  
     }
  
-    private void checkApple() {
- 
-        if ((x[0] == apple_x) && (y[0] == apple_y)) {
- 
-            dots++;
-            health += 15;
-            locateApple();
- 
-            if (dots == gold) {
-                score += 10;
-                gold += 5;
-                health += 20;
-                
-                //belum fix
-//                timer = new Timer(SPRINT, this);
-//                timer.start();
- 
-                onFire = true;
-            }
-            else {
-                score++;
- 
-                onFire = false;
-            }
-        }
-    }
- 
     private void move() {
  
         for (int z = dots; z > 0; z--) {
@@ -325,6 +318,54 @@ public class Board extends JPanel implements ActionListener {
         }
     }
  
+    private void checkApple() {
+    	 
+        if ((x[0] == apple_x) && (y[0] == apple_y)) {
+ 
+            dots++;
+            health += 15;
+            locateApple();
+            
+            if (dots == gold) {
+                score += 10;
+                gold += 5;
+                health += 20;
+                
+                //belum fix
+//                timer = new Timer(SPRINT, this);
+//                timer.start();
+ 
+                onFire = true;
+            }
+            else {
+                score++;
+ 
+                onFire = false;
+            }
+            
+            if (score >= 1)
+            {
+            	for (int i = 0; i < 10; i++)
+                {
+                	locateObstacle();
+                	obsX[i] = obs_x;
+                    obsY[i] = obs_y;
+                }
+            }
+        }
+    }
+    
+    private void checkObstacle() {
+    	
+    	for(int i = 0; i < 10; i++)
+    	{
+    		if ((x[0] == obsX[i]) && (y[0] == obsY[i])) {
+       		 
+                inGame = false;
+        	}
+    	}
+    }
+    	
     private void checkCollision() {
  
         for (int z = dots; z > 0; z--) {
@@ -361,9 +402,18 @@ public class Board extends JPanel implements ActionListener {
         apple_x = ((r * DOT_SIZE));
  
         r = (int) (Math.random() * RAND_POS);
-        apple_y = ((r * DOT_SIZE)+80);
+        apple_y = ((r * DOT_SIZE) + 80);
     }
  
+    private void locateObstacle()
+    {
+    	int s = (int) (Math.random() * RAND_POS);
+        obs_x = ((s * DOT_SIZE));
+ 
+        s = (int) (Math.random() * RAND_POS);
+        obs_y = ((s * DOT_SIZE) + 80);
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
  
@@ -371,6 +421,8 @@ public class Board extends JPanel implements ActionListener {
  
             checkApple();
             checkCollision();
+            checkObstacle();
+            
             move();
         }
  

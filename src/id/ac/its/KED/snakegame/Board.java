@@ -145,9 +145,8 @@ public class Board extends JPanel implements ActionListener {
  
         for (int i = 0; i < 10; i++)
         {
-        	locateObstacle();
-        	obsX[i] = obs_x;
-            obsY[i] = obs_y;
+        	obsX[i] = 0;
+            obsY[i] = 0;
         }
         
         locateApple();
@@ -364,6 +363,10 @@ public class Board extends JPanel implements ActionListener {
                 inGame = false;
         	}
     	}
+    	
+    	if (!inGame) {
+            timer.stop();
+        }
     }
     	
     private void checkCollision() {

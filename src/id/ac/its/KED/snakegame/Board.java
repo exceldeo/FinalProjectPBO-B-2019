@@ -45,8 +45,8 @@ public class Board extends JPanel implements ActionListener {
  
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
-    private int obsX[] = new int[10];
-    private int obsY[] = new int[10];
+    private int obsX[] = new int[20];
+    private int obsY[] = new int[20];
     
     private int dots;
     private int apple_x;
@@ -143,7 +143,7 @@ public class Board extends JPanel implements ActionListener {
             y[z] = 80;
         }
  
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
         	obsX[i] = 0;
             obsY[i] = 0;
@@ -187,7 +187,7 @@ public class Board extends JPanel implements ActionListener {
  
             if(score >= 1)
             {
-            	for(int a = 0; a < 10; a++)
+            	for(int a = 0; a < 20; a++)
             	{
             		g.drawImage(obstacle, obsX[a], obsY[a], this);
             	}
@@ -344,11 +344,18 @@ public class Board extends JPanel implements ActionListener {
             
             if (score >= 1)
             {
-            	for (int i = 0; i < 10; i++)
+            	for (int i = 0; i < 20; i++)
                 {
                 	locateObstacle();
                 	obsX[i] = obs_x;
                     obsY[i] = obs_y;
+                    
+                    if (obsX[i] == apple_x && obsY[i] == apple_y)
+                    {
+                    	locateObstacle();
+                    	obsX[i] = obs_x;
+                        obsY[i] = obs_y;
+                    }
                 }
             }
         }

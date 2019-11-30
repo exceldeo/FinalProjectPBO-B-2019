@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -61,7 +63,8 @@ public class Board extends JPanel implements ActionListener {
     private boolean rightDirection = true;
     private boolean upDirection = false;
     private boolean downDirection = false;
-    private boolean inGame = true;
+    public boolean inGame = false;
+    public boolean inMenu = true;
     private boolean onFire = false;
  
     private Timer timer;
@@ -71,6 +74,8 @@ public class Board extends JPanel implements ActionListener {
     private Image g_apple;
     private Image obstacle;			
     
+    private Menu menu;
+    
     public Board() {
  
         initBoard();
@@ -79,12 +84,17 @@ public class Board extends JPanel implements ActionListener {
     private void initBoard() {
  
         addKeyListener(new TAdapter());
+        addMouseListener(new MouseInput());
+        
         setBackground(Color.black);
         setFocusable(true);
  
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         loadImages();
         backgroundMusic();
+        
+        menu = new Menu();
+        
         initGame();
     }
  
@@ -132,27 +142,30 @@ public class Board extends JPanel implements ActionListener {
     
     private void initGame() {
  
-        score = 0;
-        dots = 3;
-        gold = 5;
-        health = 300;
- 
-        for (int z = 0; z < dots; z++) {
-        	
-            x[z] = 50 - z * 10;
-            y[z] = 80;
-        }
- 
-        for (int i = 0; i < 20; i++)
-        {
-        	obsX[i] = 0;
-            obsY[i] = 0;
-        }
-        
-        locateApple();
-         
-        timer = new Timer(DELAY, this);
-        timer.start();
+    	if(inGame == true && inMenu == false) 
+    	{
+	        score = 0;
+	        dots = 3;
+	        gold = 5;
+	        health = 300;
+	 
+	        for (int z = 0; z < dots; z++) {
+	        	
+	            x[z] = 50 - z * 10;
+	            y[z] = 80;
+	        }
+	 
+	        for (int i = 0; i < 20; i++)
+	        {
+	        	obsX[i] = 0;
+	            obsY[i] = 0;
+	        }
+	        
+	        locateApple();
+	         
+	        timer = new Timer(DELAY, this);
+	        timer.start();
+    	}
     }
  
     @Override
@@ -165,50 +178,56 @@ public class Board extends JPanel implements ActionListener {
     private void doDrawing(Graphics g) {					// Drawing the snake
  
         Graphics2D g2d = (Graphics2D) g;
-        if (inGame) {
- 
-            g.setColor(Color.white);
-            g.drawRect(0, 70, 498, 430);
- 
-            g.setColor(Color.LIGHT_GRAY);
-            g.fillRect(0, 0, 499, 69);
- 
-            drawScore(g2d);
-        	drawHealth(g2d);
- 
-            if (dots == gold - 1) {
-            	
-                g.drawImage(g_apple, apple_x, apple_y, this);
-            }
-            else {
-            	
-                g.drawImage(apple, apple_x, apple_y, this);
-            }
- 
-            if(score >= 1)
-            {
-            	for(int a = 0; a < 20; a++)
-            	{
-            		g.drawImage(obstacle, obsX[a], obsY[a], this);
-            	}
-            } 
-            
-            for (int z = 0; z < dots; z++) {
-                if (z == 0) {
-                	
-                    g.drawImage(head, x[z], y[z], this);
-                } else {
-                	
-                    g.drawImage(ball, x[z], y[z], this);
-                }
-            }
- 
-            Toolkit.getDefaultToolkit().sync();
- 
-        } else {
- 
-            gameOver(g);
-        }
+        if (inMenu) {
+    		menu.render(g);
+    	}
+    	else
+    	{
+	        if (inGame) {
+	 
+	            g.setColor(Color.white);
+	            g.drawRect(0, 70, 498, 430);
+	 
+	            g.setColor(Color.LIGHT_GRAY);
+	            g.fillRect(0, 0, 499, 69);
+	 
+	            drawScore(g2d);
+	        	drawHealth(g2d);
+	 
+	            if (dots == gold - 1) {
+	            	
+	                g.drawImage(g_apple, apple_x, apple_y, this);
+	            }
+	            else {
+	            	
+	                g.drawImage(apple, apple_x, apple_y, this);
+	            }
+	 
+	            if(score >= 1)
+	            {
+	            	for(int a = 0; a < 20; a++)
+	            	{
+	            		g.drawImage(obstacle, obsX[a], obsY[a], this);
+	            	}
+	            } 
+	            
+	            for (int z = 0; z < dots; z++) {
+	                if (z == 0) {
+	                	
+	                    g.drawImage(head, x[z], y[z], this);
+	                } else {
+	                	
+	                    g.drawImage(ball, x[z], y[z], this);
+	                }
+	            }
+	 
+	            Toolkit.getDefaultToolkit().sync();
+	 
+	        } else {
+	 
+	            gameOver(g);
+	        }
+    	}
     }
  
     private void drawScore(Graphics2D g) {
@@ -471,4 +490,45 @@ public class Board extends JPanel implements ActionListener {
             }
         }
     }
+    
+    public class MouseInput implements MouseListener {
+
+		@Override
+    	public void mouseClicked(MouseEvent e) {
+    		
+    	}
+
+    	@Override
+    	public void mousePressed(MouseEvent e) {
+    		int mx = e.getX();
+    		int my = e.getY();
+    		System.out.println(mx);
+    		System.out.println(my);
+    		
+    		if(mx >= 120 && mx <= 360)
+    		{
+    			if(my >= 200 && my <= 260)
+    			{
+    				inGame = true;
+    				inMenu = false;
+    				initGame();
+    		    }
+    		}
+    	}
+
+    	@Override
+    	public void mouseReleased(MouseEvent e) {
+    		
+    	}
+
+    	@Override
+    	public void mouseEntered(MouseEvent e) {
+    		
+    	}
+
+    	@Override
+    	public void mouseExited(MouseEvent e) {
+    		
+    	}
+    }    
 }

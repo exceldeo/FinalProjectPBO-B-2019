@@ -43,7 +43,7 @@ public class Board extends JPanel implements ActionListener {
     private final int ALL_DOTS = 900;
     private final int RAND_POS = 41;
     private final int DELAY = 150;
-//    private final int SPRINT = 120;
+    private final int SPRINT = 100;
  
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
@@ -294,8 +294,11 @@ public class Board extends JPanel implements ActionListener {
             y[z] = y[(z - 1)];
         }
  
-        if (onFire == true)				// belum fix
+        if (onFire == true)	
         {
+            timer.stop();
+            timer = new Timer(SPRINT, this);
+            timer.start();
  
             if (leftDirection) {
                 x[0] -= (DOT_SIZE);
@@ -312,6 +315,10 @@ public class Board extends JPanel implements ActionListener {
         }
         else
         {
+
+            timer.stop();
+            timer = new Timer(DELAY, this);
+            timer.start();
             if (leftDirection) {
                 x[0] -= DOT_SIZE;
             }
@@ -349,9 +356,8 @@ public class Board extends JPanel implements ActionListener {
                 gold += 5;
                 health += 20;
                 
-                //belum fix
-//                timer = new Timer(SPRINT, this);
-//                timer.start();
+            //     belum fix
+              
  
                 onFire = true;
             }

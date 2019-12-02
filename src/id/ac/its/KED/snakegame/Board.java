@@ -43,7 +43,7 @@ public class Board extends JPanel implements ActionListener {
     private final int ALL_DOTS = 900;
     private final int RAND_POS = 41;
     private final int DELAY = 150;
-    private final int SPRINT = 100;
+    private final int SPRINT = 70;
  
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
@@ -355,10 +355,7 @@ public class Board extends JPanel implements ActionListener {
                 score += 10;
                 gold += 5;
                 health += 20;
-                
-            //     belum fix
-              
- 
+         
                 onFire = true;
             }
             else {
@@ -388,7 +385,7 @@ public class Board extends JPanel implements ActionListener {
     
     private void checkObstacle() {
     	
-    	for(int i = 0; i < 10; i++)
+    	for(int i = 0; i < 20; i++)
     	{
     		if ((x[0] == obsX[i]) && (y[0] == obsY[i])) {
        		 
@@ -506,19 +503,22 @@ public class Board extends JPanel implements ActionListener {
 
     	@Override
     	public void mousePressed(MouseEvent e) {
-    		int mx = e.getX();
-    		int my = e.getY();
-    		System.out.println(mx);
-    		System.out.println(my);
-    		
-    		if(mx >= 120 && mx <= 360)
+    		if(inMenu == true)
     		{
-    			if(my >= 200 && my <= 260)
-    			{
-    				inGame = true;
-    				inMenu = false;
-    				initGame();
-    		    }
+    			int mx = e.getX();
+        		int my = e.getY();
+        		System.out.println(mx);
+        		System.out.println(my);
+        		
+        		if(mx >= 120 && mx <= 360)
+        		{
+        			if(my >= 200 && my <= 260)
+        			{
+        				inGame = true;
+        				inMenu = false;
+        				initGame();
+        		    }
+        		}
     		}
     	}
 

@@ -1,7 +1,5 @@
 package id.ac.its.KED.snakegame;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -11,22 +9,28 @@ public class Menu {
 
 	private Image playButton;
     private Image timeattButton;
+    private Image highscoreButton;
+    private Image background;
     
 	public void render(Graphics g)
 	{
 		
-		Font font = new Font("Helvetica", Font.BOLD, 50);
-		g.setFont(font);
-		g.setColor(Color.WHITE);
-		g.drawString("Sssnake !", 125 , 125);
-		
+		ImageIcon back = new ImageIcon("src/resources/backgroundmenu.png");
+        background = back.getImage();
+        
+        g.drawImage(background, 0, 0, null);
+        
 		ImageIcon pb = new ImageIcon("src/resources/button/buttonstart.png");
         playButton = pb.getImage();
         
         ImageIcon tt = new ImageIcon("src/resources/button/buttontime.png");
         timeattButton = tt.getImage();
         
-        g.drawImage(playButton, 110, 200, null);
-        g.drawImage(timeattButton, 110, 300, null);
+        ImageIcon hs = new ImageIcon("src/resources/button/buttonhighscore.png");
+        highscoreButton = hs.getImage();
+        
+        g.drawImage(playButton, 110, 240, null);
+        g.drawImage(timeattButton, 110, 320, null);
+        g.drawImage(highscoreButton, 110, 400, null);
 	}
 }

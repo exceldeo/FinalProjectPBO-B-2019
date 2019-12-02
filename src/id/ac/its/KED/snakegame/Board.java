@@ -296,22 +296,10 @@ public class Board extends JPanel implements ActionListener {
  
         if (onFire == true)	
         {
+        	
             timer.stop();
             timer = new Timer(SPRINT, this);
             timer.start();
- 
-            if (leftDirection) {
-                x[0] -= (DOT_SIZE);
-            }
-            if (rightDirection) {
-                x[0] += (DOT_SIZE);
-            }
-            if (upDirection) {
-                y[0] -= (DOT_SIZE);
-            }
-            if (downDirection) {
-                y[0] += (DOT_SIZE);
-            }
         }
         else
         {
@@ -319,20 +307,21 @@ public class Board extends JPanel implements ActionListener {
             timer.stop();
             timer = new Timer(DELAY, this);
             timer.start();
-            if (leftDirection) {
-                x[0] -= DOT_SIZE;
-            }
-            if (rightDirection) {
-                x[0] += DOT_SIZE;
-            }
-            if (upDirection) {
-                y[0] -= DOT_SIZE;
-            }
-            if (downDirection) {
-                y[0] += DOT_SIZE;
-            }
         }
  
+        if (leftDirection) {
+            x[0] -= DOT_SIZE;
+        }
+        if (rightDirection) {
+            x[0] += DOT_SIZE;
+        }
+        if (upDirection) {
+            y[0] -= DOT_SIZE;
+        }
+        if (downDirection) {
+            y[0] += DOT_SIZE;
+        }
+        
         if(health > 0)		// Setiap move menghabiskan darah player
         {
             health--;
@@ -371,6 +360,13 @@ public class Board extends JPanel implements ActionListener {
                 	locateObstacle();
                 	obsX[i] = obs_x;
                     obsY[i] = obs_y;
+                    
+                    if (obsX[i] <= x[0] + 10 && obsX[i] >= x[0] - 10 && obsY[i] <= y[0] + 10 && obsY[i] >= y[0] - 10)
+                    {
+                    	locateObstacle();
+                    	obsX[i] = obs_x;
+                        obsY[i] = obs_y;
+                    }
                     
                     if (obsX[i] == apple_x && obsY[i] == apple_y)
                     {
@@ -411,7 +407,7 @@ public class Board extends JPanel implements ActionListener {
             inGame = false;
         }
  
-        if (y[0] < 80) {
+        if (y[0] < 70) {
             inGame = false;
         }
  
@@ -510,9 +506,9 @@ public class Board extends JPanel implements ActionListener {
         		System.out.println(mx);
         		System.out.println(my);
         		
-        		if(mx >= 120 && mx <= 360)
+        		if(mx >= 110 && mx <= 380)
         		{
-        			if(my >= 200 && my <= 260)
+        			if(my >= 240 && my <= 300)
         			{
         				inGame = true;
         				inMenu = false;

@@ -58,6 +58,7 @@ public class Board extends JPanel implements ActionListener {
     private int health;
     private int obs_x;
     private int obs_y;
+    private int typeG;
  
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -72,7 +73,9 @@ public class Board extends JPanel implements ActionListener {
     private Image apple;
     private Image head;
     private Image g_apple;
-    private Image obstacle;			
+    private Image obstacle;
+
+    private TimeCounter timeCounter;
     
     private Menu menu;
     
@@ -144,6 +147,7 @@ public class Board extends JPanel implements ActionListener {
  
     	if(inGame == true && inMenu == false) 
     	{
+    	    timeCounter = new TimeCounter(0, 0, 0);
 	        score = 0;
 	        dots = 3;
 	        gold = 5;
@@ -190,36 +194,67 @@ public class Board extends JPanel implements ActionListener {
 	 
 	            g.setColor(Color.LIGHT_GRAY);
 	            g.fillRect(0, 0, 499, 69);
-	 
-	            drawScore(g2d);
-	        	drawHealth(g2d);
-	 
-	            if (dots == gold - 1) {
-	            	
-	                g.drawImage(g_apple, apple_x, apple_y, this);
-	            }
-	            else {
-	            	
-	                g.drawImage(apple, apple_x, apple_y, this);
-	            }
-	 
-	            if(score >= 1)
-	            {
-	            	for(int a = 0; a < 20; a++)
-	            	{
-	            		g.drawImage(obstacle, obsX[a], obsY[a], this);
-	            	}
-	            } 
-	            
-	            for (int z = 0; z < dots; z++) {
-	                if (z == 0) {
-	                	
-	                    g.drawImage(head, x[z], y[z], this);
-	                } else {
-	                	
-	                    g.drawImage(ball, x[z], y[z], this);
-	                }
-	            }
+
+	            // if (typeG == 1) {
+                    drawScore(g2d);
+                    drawHealth(g2d);
+
+                    if (dots == gold - 1) {
+
+                        g.drawImage(g_apple, apple_x, apple_y, this);
+                    } else {
+
+                        g.drawImage(apple, apple_x, apple_y, this);
+                    }
+
+                    if (score >= 1) {
+                        for (int a = 0; a < 20; a++) {
+                            g.drawImage(obstacle, obsX[a], obsY[a], this);
+                        }
+                    }
+
+                    for (int z = 0; z < dots; z++) {
+                        if (z == 0) {
+
+                            g.drawImage(head, x[z], y[z], this);
+                        } else {
+
+                            g.drawImage(ball, x[z], y[z], this);
+                        }
+                    }
+                // }
+
+	            // else if (typeG == 2) {
+                //     drawTimeCounter(g2d);
+                //     drawScore(g2d);
+
+                //     if (dots == gold - 1) {
+
+                //         g.drawImage(g_apple, apple_x, apple_y, this);
+                //     }
+                //     else {
+
+                //         g.drawImage(apple, apple_x, apple_y, this);
+                //     }
+
+                //     if(dots >= 1)
+                //     {
+                //         for(int a = 0; a < 100; a++)
+                //         {
+                //             g.drawImage(obstacle, obsX[a], obsY[a], this);
+                //         }
+                //     }
+
+                //     for (int z = 0; z < dots; z++) {
+                //         if (z == 0) {
+
+                //             g.drawImage(head, x[z], y[z], this);
+                //         } else {
+
+                //             g.drawImage(ball, x[z], y[z], this);
+                //         }
+                //     }
+                // }
 	 
 	            Toolkit.getDefaultToolkit().sync();
 	 
@@ -260,32 +295,63 @@ public class Board extends JPanel implements ActionListener {
         h = "Health: " + health;
         g.drawString(h, SCREEN_SIZE / 3 + 100, SCREEN_SIZE / 10);
     }
+
+    private void drawTimeCounter(Graphics2D g) {
+        String ts;
+
+        g.setFont(smallFont);
+        g.setColor(new Color(96,128,255));
+        ts = "Time: " + timeCounter.reslt();
+        g.drawString(ts, SCREEN_SIZE / 5, SCREEN_SIZE / 10);
+    }
  
     private void gameOver(Graphics g) {				// Game Over UI
- 
-        String msg = "Game Over !";
-        String msg1 = "Score : " + score;
-        String msg2 = "Press Spacebar to retry";
-        Font small = new Font("Helvetica", Font.BOLD, 20);
-        FontMetrics metr = getFontMetrics(small);
- 
-        g.setColor(Color.white);
-        g.setFont(small);
-        g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2 - 40);
-        g.drawString(msg2,(B_WIDTH - metr.stringWidth(msg)) / 2 - 50, (B_HEIGHT / 2) + 60);
- 
-        if (score < 10) {
- 
-            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2);
-        }
-        else if (score < 100 && score > 10 ) {
- 
-            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 5, B_HEIGHT / 2);
-        }
-        else {
- 
-            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2);
-        }
+
+        // if (typeG == 1) {
+            String msg = "Game Over !";
+            String msg1 = "Score : " + score;
+            String msg2 = "Press Spacebar to retry";
+            Font small = new Font("Helvetica", Font.BOLD, 20);
+            FontMetrics metr = getFontMetrics(small);
+
+            g.setColor(Color.white);
+            g.setFont(small);
+            g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2 - 40);
+            g.drawString(msg2,(B_WIDTH - metr.stringWidth(msg)) / 2 - 50, (B_HEIGHT / 2) + 60);
+
+            if (score < 10) {
+
+                g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2);
+            } else if (score < 100 && score > 10) {
+
+                g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 5, B_HEIGHT / 2);
+            } else {
+
+                g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2);
+            }
+        // }
+
+        // else if (typeG == 2) {
+        //     String msg = "Game Over !";
+        //     String msg1 = "Score : " + score + "    Time: " + timeCounter.reslt();
+        //     Font small = new Font("Helvetica", Font.BOLD, 20);
+        //     FontMetrics metr = getFontMetrics(small);
+
+        //     g.setColor(Color.white);
+        //     g.setFont(small);
+        //     g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
+
+        //     if (dots < 10) {
+
+        //         g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+        //     } else if (dots < 100 && dots > 10) {
+
+        //         g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 5, B_HEIGHT / 2 + 40);
+        //     } else {
+
+        //         g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2 + 40);
+        //     }
+        // }
  
     }
  
@@ -295,22 +361,22 @@ public class Board extends JPanel implements ActionListener {
             x[z] = x[(z - 1)];
             y[z] = y[(z - 1)];
         }
- 
-        if (onFire == true)	
+
+        if (onFire == true)
         {
-        	
+
             timer.stop();
             timer = new Timer(SPRINT, this);
             timer.start();
         }
         else
         {
-        	
+
             timer.stop();
             timer = new Timer(DELAY, this);
             timer.start();
         }
- 
+
         if (leftDirection) {
             x[0] -= DOT_SIZE;
         }
@@ -323,37 +389,55 @@ public class Board extends JPanel implements ActionListener {
         if (downDirection) {
             y[0] += DOT_SIZE;
         }
-        
-        if(health > 0)		// Setiap move menghabiskan darah player
-        {
-            health--;
-        }
-        else
-        {
-            inGame = false;
-        }
+
+        // if (typeG == 1) {
+            if (health > 0)        // Setiap move menghabiskan darah player
+            {
+                health--;
+            }
+            else {
+                inGame = false;
+            }
+        // }
     }
  
     private void checkApple() {
     	 
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
- 
-            dots++;
-            health += 15;
-            locateApple();
-            
-            if (dots == gold) {
-                score += 10;
-                gold += 5;
-                health += 20;
-         
-                onFire = true;
-            }
-            else {
-                score++;
- 
-                onFire = false;
-            }
+            // if (typeG == 1) {
+
+                dots++;
+                health += 15;
+                locateApple();
+
+                if (dots == gold) {
+                    score += 10;
+                    gold += 5;
+                    health += 20;
+
+                    onFire = true;
+                } else {
+                    score++;
+
+                    onFire = false;
+                }
+            // }
+
+            // else if (typeG == 2) {
+            //     dots++;
+            //     score++;
+            //     locateApple();
+
+            //     if (dots == gold) {
+            //         gold += 5;
+            //         score++;
+            //         onFire = true;
+            //     }
+            //     else {
+            //         onFire = false;
+            //     }
+
+            // }
             
             if (score >= 1)
             {
@@ -462,32 +546,31 @@ public class Board extends JPanel implements ActionListener {
     private class TAdapter extends KeyAdapter {
  
         @Override
-        public void keyPressed(KeyEvent e) { 
-        	
-        	int key = e.getKeyCode();
-			// Input Key (Analog)
-        	
-        	if(inGame == true) {	
-            
+        public void keyPressed(KeyEvent e) {
+ 
+            int key = e.getKeyCode();	// Input Key (Analog)
+ 
+            if(inGame == true) {	
+
         		if ((key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && (!rightDirection)) {
-               
+
         			leftDirection = true;
 	                upDirection = false;
 	                downDirection = false;
 	            }
-	 
+
 	            if ((key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && (!leftDirection)) {
 	                rightDirection = true;
 	                upDirection = false;
 	                downDirection = false;
 	            }
-	 
+
 	            if ((key == KeyEvent.VK_UP || key == KeyEvent.VK_W) && (!downDirection)) {
 	                upDirection = true;
 	                rightDirection = false;
 	                leftDirection = false;
 	            }
-	 
+
 	            if ((key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && (!upDirection)) {
 	                downDirection = true;
 	                rightDirection = false;
@@ -495,7 +578,7 @@ public class Board extends JPanel implements ActionListener {
 	            }
         	}
         	else {
-        		
+
         		if (key == KeyEvent.VK_SPACE) {
 	                inGame = true;
 	                inMenu = false;
@@ -534,8 +617,8 @@ public class Board extends JPanel implements ActionListener {
         				inGame = true;
         				inMenu = false;
         				initGame();
-        		    }
-        		}
+                    }
+                }
     		}
     	}
 

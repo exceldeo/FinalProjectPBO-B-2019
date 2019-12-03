@@ -265,24 +265,26 @@ public class Board extends JPanel implements ActionListener {
  
         String msg = "Game Over !";
         String msg1 = "Score : " + score;
+        String msg2 = "Press Spacebar to retry";
         Font small = new Font("Helvetica", Font.BOLD, 20);
         FontMetrics metr = getFontMetrics(small);
  
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
+        g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2 - 40);
+        g.drawString(msg2,(B_WIDTH - metr.stringWidth(msg)) / 2 - 50, (B_HEIGHT / 2) + 60);
  
-        if (dots < 10) {
+        if (score < 10) {
  
-            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2);
         }
-        else if (dots < 100 && dots > 10 ) {
+        else if (score < 100 && score > 10 ) {
  
-            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 5, B_HEIGHT / 2 + 40);
+            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 5, B_HEIGHT / 2);
         }
         else {
  
-            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2 + 40);
+            g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2);
         }
  
     }
@@ -303,7 +305,7 @@ public class Board extends JPanel implements ActionListener {
         }
         else
         {
-
+        	
             timer.stop();
             timer = new Timer(DELAY, this);
             timer.start();
@@ -460,33 +462,52 @@ public class Board extends JPanel implements ActionListener {
     private class TAdapter extends KeyAdapter {
  
         @Override
-        public void keyPressed(KeyEvent e) {
- 
-            int key = e.getKeyCode();	// Input Key (Analog)
- 
-            if ((key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && (!rightDirection)) {
-                leftDirection = true;
-                upDirection = false;
-                downDirection = false;
-            }
- 
-            if ((key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && (!leftDirection)) {
-                rightDirection = true;
-                upDirection = false;
-                downDirection = false;
-            }
- 
-            if ((key == KeyEvent.VK_UP || key == KeyEvent.VK_W) && (!downDirection)) {
-                upDirection = true;
-                rightDirection = false;
-                leftDirection = false;
-            }
- 
-            if ((key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && (!upDirection)) {
-                downDirection = true;
-                rightDirection = false;
-                leftDirection = false;
-            }
+        public void keyPressed(KeyEvent e) { 
+        	
+        	int key = e.getKeyCode();
+			// Input Key (Analog)
+        	
+        	if(inGame == true) {	
+            
+        		if ((key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && (!rightDirection)) {
+               
+        			leftDirection = true;
+	                upDirection = false;
+	                downDirection = false;
+	            }
+	 
+	            if ((key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && (!leftDirection)) {
+	                rightDirection = true;
+	                upDirection = false;
+	                downDirection = false;
+	            }
+	 
+	            if ((key == KeyEvent.VK_UP || key == KeyEvent.VK_W) && (!downDirection)) {
+	                upDirection = true;
+	                rightDirection = false;
+	                leftDirection = false;
+	            }
+	 
+	            if ((key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && (!upDirection)) {
+	                downDirection = true;
+	                rightDirection = false;
+	                leftDirection = false;
+	            }
+        	}
+        	else {
+        		
+        		if (key == KeyEvent.VK_SPACE) {
+	                inGame = true;
+	                inMenu = false;
+	                onFire = false;
+	                upDirection = false;
+	                downDirection = false;
+	                leftDirection = false;
+	                rightDirection = true;
+	                timer.stop();
+	                initGame();
+	            }
+        	}
         }
     }
     

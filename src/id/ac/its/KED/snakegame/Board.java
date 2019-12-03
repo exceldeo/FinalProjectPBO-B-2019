@@ -47,9 +47,9 @@ public class Board extends JPanel implements ActionListener {
  
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
-    private int obsX[] = new int[20];
-    private int obsY[] = new int[20];
-    
+    private final int obsX[] = new int[20];
+    private final int obsY[] = new int[20];
+
     private int dots;
     private int apple_x;
     private int apple_y;
@@ -59,7 +59,7 @@ public class Board extends JPanel implements ActionListener {
     private int obs_x;
     private int obs_y;
     private int typeG;
- 
+
     private boolean leftDirection = false;
     private boolean rightDirection = true;
     private boolean upDirection = false;
@@ -67,7 +67,7 @@ public class Board extends JPanel implements ActionListener {
     public boolean inGame = false;
     public boolean inMenu = true;
     private boolean onFire = false;
- 
+
     private Timer timer;
     private Image ball;
     private Image apple;
@@ -76,126 +76,121 @@ public class Board extends JPanel implements ActionListener {
     private Image obstacle;
 
     private TimeCounter timeCounter;
-    
+
     private Menu menu;
-    
+
     public Board() {
- 
+
         initBoard();
     }
- 
+
     private void initBoard() {
- 
+
         addKeyListener(new TAdapter());
         addMouseListener(new MouseInput());
-        
+
         setBackground(Color.black);
         setFocusable(true);
- 
+
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         loadImages();
         backgroundMusic();
-        
+
         menu = new Menu();
-        
+
         initGame();
     }
- 
+
     private void loadImages() {
- 
-        ImageIcon iid = new ImageIcon("src/resources/images/dot.png");
+
+        final ImageIcon iid = new ImageIcon("src/resources/images/dot.png");
         ball = iid.getImage();
- 
-        ImageIcon iia = new ImageIcon("src/resources/images/apple.png");
+
+        final ImageIcon iia = new ImageIcon("src/resources/images/apple.png");
         apple = iia.getImage();
- 
-        ImageIcon iig = new ImageIcon("src/resources/images/gold_apple.png");
+
+        final ImageIcon iig = new ImageIcon("src/resources/images/gold_apple.png");
         g_apple = iig.getImage();
- 
-        ImageIcon iih = new ImageIcon("src/resources/images/head.png");
+
+        final ImageIcon iih = new ImageIcon("src/resources/images/head.png");
         head = iih.getImage();
-        
-        ImageIcon iio = new ImageIcon("src/resources/images/obstacle.png");
+
+        final ImageIcon iio = new ImageIcon("src/resources/images/obstacle.png");
         obstacle = iio.getImage();
     }
- 
-    private void backgroundMusic() 
-    {
-    	
-    	AudioPlayer MGP = AudioPlayer.player;
-    	AudioStream BGM;
-    	
-    	ContinuousAudioDataStream loop = null;
-    	
-    	try {
-    		InputStream BGMfile = new FileInputStream("src/resources/music/background.wav");
+
+    private void backgroundMusic() {
+
+        final AudioPlayer MGP = AudioPlayer.player;
+        AudioStream BGM;
+
+        final ContinuousAudioDataStream loop = null;
+
+        try {
+            final InputStream BGMfile = new FileInputStream("src/resources/music/background.wav");
             BGM = new AudioStream(BGMfile);
             AudioPlayer.player.start(BGM);
-    	}
-    	catch(FileNotFoundException e){
-            System.out.print(e.toString());			// file not found
-        }
-        catch(IOException error)
-        {
+        } catch (final FileNotFoundException e) {
+            System.out.print(e.toString()); // file not found
+        } catch (final IOException error) {
             System.out.print(error.toString());
         }
-    	
-    	MGP.start(loop);
+
+        MGP.start(loop);
     }
-    
+
     private void initGame() {
- 
-    	if(inGame == true && inMenu == false) 
-    	{
-    	    timeCounter = new TimeCounter(0, 0, 0);
-	        score = 0;
-	        dots = 3;
-	        gold = 5;
-	        health = 300;
-	 
-	        for (int z = 0; z < dots; z++) {
-	        	
-	            x[z] = 50 - z * 10;
-	            y[z] = 80;
-	        }
-	 
-	        for (int i = 0; i < 20; i++)
-	        {
-	        	obsX[i] = 0;
-	            obsY[i] = 0;
-	        }
-	        
-	        locateApple();
-	         
-	        timer = new Timer(DELAY, this);
-	        timer.start();
-    	}
+
+        if (inGame == true && inMenu == false) {
+            timeCounter = new TimeCounter(0, 0, 0);
+            score = 0;
+            dots = 3;
+            gold = 5;
+            health = 300;
+
+            for (int z = 0; z < dots; z++) {
+
+                x[z] = 50 - z * 10;
+                y[z] = 80;
+            }
+
+            for (int i = 0; i < 20; i++) {
+                obsX[i] = 0;
+                obsY[i] = 0;
+            }
+
+            locateApple();
+
+            timer = new Timer(DELAY, this);
+            timer.start();
+        }
     }
- 
+
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(final Graphics g) {
         super.paintComponent(g);
- 
+
         doDrawing(g);
     }
- 
-    private void doDrawing(Graphics g) {					// Drawing the snake
- 
-        Graphics2D g2d = (Graphics2D) g;
-        if (inMenu) {
-    		menu.render(g);
-    	}
-    	else
-    	{
-	        if (inGame) {
-	 
-	            g.setColor(Color.white);
-	            g.drawRect(0, 70, 498, 430);
-	 
-	            g.setColor(Color.LIGHT_GRAY);
-	            g.fillRect(0, 0, 499, 69);
 
-	            // if (typeG == 1) {
+    private void doDrawing(final Graphics g) { // Drawing the snake
+
+        final Graphics2D g2d = (Graphics2D) g;
+
+        if (inMenu) {
+
+            menu.render(g);
+        } else {
+            if (inGame) {
+
+                g.setColor(Color.white);
+                g.drawRect(0, 70, 498, 430);
+
+                g.setColor(Color.LIGHT_GRAY);
+                g.fillRect(0, 0, 499, 69);
+
+                if (typeG == 1) {
+
                     drawScore(g2d);
                     drawHealth(g2d);
 
@@ -214,6 +209,7 @@ public class Board extends JPanel implements ActionListener {
                     }
 
                     for (int z = 0; z < dots; z++) {
+
                         if (z == 0) {
 
                             g.drawImage(head, x[z], y[z], this);
@@ -222,102 +218,95 @@ public class Board extends JPanel implements ActionListener {
                             g.drawImage(ball, x[z], y[z], this);
                         }
                     }
-                // }
+                }
 
-	            // else if (typeG == 2) {
-                //     drawTimeCounter(g2d);
-                //     drawScore(g2d);
+                else if (typeG == 2) {
 
-                //     if (dots == gold - 1) {
+                    drawTimeCounter(g2d);
+                    drawScore(g2d);
 
-                //         g.drawImage(g_apple, apple_x, apple_y, this);
-                //     }
-                //     else {
+                    if (dots == gold - 1) {
 
-                //         g.drawImage(apple, apple_x, apple_y, this);
-                //     }
+                        g.drawImage(g_apple, apple_x, apple_y, this);
+                    } else {
 
-                //     if(dots >= 1)
-                //     {
-                //         for(int a = 0; a < 100; a++)
-                //         {
-                //             g.drawImage(obstacle, obsX[a], obsY[a], this);
-                //         }
-                //     }
+                        g.drawImage(apple, apple_x, apple_y, this);
+                    }
 
-                //     for (int z = 0; z < dots; z++) {
-                //         if (z == 0) {
+                    // --> Bagian untuk syntax obstacles
 
-                //             g.drawImage(head, x[z], y[z], this);
-                //         } else {
+                    for (int z = 0; z < dots; z++) {
+                        if (z == 0) {
 
-                //             g.drawImage(ball, x[z], y[z], this);
-                //         }
-                //     }
-                // }
-	 
-	            Toolkit.getDefaultToolkit().sync();
-	 
-	        } else {
-	 
-	            gameOver(g);
-	        }
-    	}
+                            g.drawImage(head, x[z], y[z], this);
+                        } else {
+
+                            g.drawImage(ball, x[z], y[z], this);
+                        }
+                    }
+                }
+
+                Toolkit.getDefaultToolkit().sync();
+
+            } else {
+
+                gameOver(g);
+            }
+        }
     }
- 
-    private void drawScore(Graphics2D g) {
+
+    private void drawScore(final Graphics2D g) {
         String s;
- 
+
         g.setFont(smallFont);
-        g.setColor(new Color(96,128,255));
+        g.setColor(new Color(96, 128, 255));
         s = "Score: " + score;
         g.drawString(s, SCREEN_SIZE / 5, SCREEN_SIZE / 10);
     }
- 
-    private void drawHealth(Graphics2D g) {
+
+    private void drawHealth(final Graphics2D g) {
         String h;
- 
+
         g.setFont(smallFont);
-        
+
         if (health > 200) {
-        	
-        	g.setColor(new Color(96,128,255));
+
+            g.setColor(new Color(96, 128, 255));
+        } else if (health > 100 && health <= 200) {
+
+            g.setColor(new Color(255, 255, 0));
+        } else {
+
+            g.setColor(new Color(255, 0, 0));
         }
-        else if (health > 100 && health <= 200) {
-        	
-        	g.setColor(new Color(255,255,0));
-        }
-        else {
-        	
-        	g.setColor(new Color(255,0,0));
-        }
-        
+
         h = "Health: " + health;
         g.drawString(h, SCREEN_SIZE / 3 + 100, SCREEN_SIZE / 10);
     }
 
-    private void drawTimeCounter(Graphics2D g) {
+    private void drawTimeCounter(final Graphics2D g) {
         String ts;
 
         g.setFont(smallFont);
-        g.setColor(new Color(96,128,255));
-        ts = "Time: " + timeCounter.reslt();
-        g.drawString(ts, SCREEN_SIZE / 5, SCREEN_SIZE / 10);
+        g.setColor(new Color(96, 128, 255));
+        ts = "Time: " + timeCounter.result();
+        g.drawString(ts, SCREEN_SIZE / 5 + 180, SCREEN_SIZE / 10);
     }
- 
-    private void gameOver(Graphics g) {				// Game Over UI
 
-        // if (typeG == 1) {
-            String msg = "Game Over !";
-            String msg1 = "Score : " + score;
-            String msg2 = "Press Spacebar to retry";
-            Font small = new Font("Helvetica", Font.BOLD, 20);
-            FontMetrics metr = getFontMetrics(small);
+    private void gameOver(final Graphics g) { // Game Over UI
+
+        if (typeG == 1) {
+
+            final String msg = "Game Over !";
+            final String msg1 = "Score : " + score;
+            final String msg2 = "Press Spacebar to retry";
+            final Font small = new Font("Helvetica", Font.BOLD, 20);
+            final FontMetrics metr = getFontMetrics(small);
 
             g.setColor(Color.white);
             g.setFont(small);
             g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2 - 40);
-            g.drawString(msg2,(B_WIDTH - metr.stringWidth(msg)) / 2 - 50, (B_HEIGHT / 2) + 60);
+            g.drawString(msg2, (B_WIDTH - metr.stringWidth(msg)) / 2 - 50, (B_HEIGHT / 2) + 60);
 
             if (score < 10) {
 
@@ -329,48 +318,46 @@ public class Board extends JPanel implements ActionListener {
 
                 g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2);
             }
-        // }
+        }
 
-        // else if (typeG == 2) {
-        //     String msg = "Game Over !";
-        //     String msg1 = "Score : " + score + "    Time: " + timeCounter.reslt();
-        //     Font small = new Font("Helvetica", Font.BOLD, 20);
-        //     FontMetrics metr = getFontMetrics(small);
+        else if (typeG == 2) {
 
-        //     g.setColor(Color.white);
-        //     g.setFont(small);
-        //     g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
+            final String msg = "Game Over !";
+            final String msg1 = "Score : " + score + "    Time: " + timeCounter.result();
+            final Font small = new Font("Helvetica", Font.BOLD, 20);
+            final FontMetrics metr = getFontMetrics(small);
 
-        //     if (dots < 10) {
+            g.setColor(Color.white);
+            g.setFont(small);
+            g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
 
-        //         g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
-        //     } else if (dots < 100 && dots > 10) {
+            if (score < 10) {
 
-        //         g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 5, B_HEIGHT / 2 + 40);
-        //     } else {
+                g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
+            } else if (score < 100 && score > 10) {
 
-        //         g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2 + 40);
-        //     }
-        // }
- 
+                g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 5, B_HEIGHT / 2 + 40);
+            } else {
+
+                g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2 + 40);
+            }
+        }
+
     }
- 
+
     private void move() {
- 
+
         for (int z = dots; z > 0; z--) {
             x[z] = x[(z - 1)];
             y[z] = y[(z - 1)];
         }
 
-        if (onFire == true)
-        {
+        if (onFire == true) {
 
             timer.stop();
             timer = new Timer(SPRINT, this);
             timer.start();
-        }
-        else
-        {
+        } else {
 
             timer.stop();
             timer = new Timer(DELAY, this);
@@ -390,21 +377,21 @@ public class Board extends JPanel implements ActionListener {
             y[0] += DOT_SIZE;
         }
 
-        // if (typeG == 1) {
-            if (health > 0)        // Setiap move menghabiskan darah player
+        if (typeG == 1) {
+            if (health > 0) // Setiap move menghabiskan darah player
             {
                 health--;
-            }
-            else {
+            } else {
                 inGame = false;
             }
-        // }
+        }
     }
- 
+
     private void checkApple() {
-    	 
+
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
-            // if (typeG == 1) {
+
+            if (typeG == 1) {
 
                 dots++;
                 health += 15;
@@ -421,219 +408,220 @@ public class Board extends JPanel implements ActionListener {
 
                     onFire = false;
                 }
-            // }
+            }
 
-            // else if (typeG == 2) {
-            //     dots++;
-            //     score++;
-            //     locateApple();
+            else if (typeG == 2) {
 
-            //     if (dots == gold) {
-            //         gold += 5;
-            //         score++;
-            //         onFire = true;
-            //     }
-            //     else {
-            //         onFire = false;
-            //     }
+                dots++;
+                score++;
+                locateApple();
 
-            // }
-            
-            if (score >= 1)
-            {
-            	for (int i = 0; i < 20; i++)
-                {
-                	locateObstacle();
-                	obsX[i] = obs_x;
+                if (dots == gold) {
+                    gold += 5;
+                    score++;
+                    onFire = true;
+                } else {
+                    onFire = false;
+                }
+            }
+
+            if (score >= 1) {
+                for (int i = 0; i < 20; i++) {
+                    locateObstacle();
+                    obsX[i] = obs_x;
                     obsY[i] = obs_y;
-                    
-                    if (obsX[i] <= x[0] + 10 && obsX[i] >= x[0] - 10 && obsY[i] <= y[0] + 10 && obsY[i] >= y[0] - 10)
-                    {
-                    	locateObstacle();
-                    	obsX[i] = obs_x;
+
+                    if (obsX[i] <= x[0] + 10 && obsX[i] >= x[0] - 10 && obsY[i] <= y[0] + 10 && obsY[i] >= y[0] - 10) {
+                        locateObstacle();
+                        obsX[i] = obs_x;
                         obsY[i] = obs_y;
                     }
-                    
-                    if (obsX[i] == apple_x && obsY[i] == apple_y)
-                    {
-                    	locateObstacle();
-                    	obsX[i] = obs_x;
+
+                    if (obsX[i] == apple_x && obsY[i] == apple_y) {
+                        locateObstacle();
+                        obsX[i] = obs_x;
                         obsY[i] = obs_y;
                     }
                 }
             }
         }
     }
-    
+
     private void checkObstacle() {
-    	
-    	for(int i = 0; i < 20; i++)
-    	{
-    		if ((x[0] == obsX[i]) && (y[0] == obsY[i])) {
-       		 
-                inGame = false;
-        	}
-    	}
-    	
-    	if (!inGame) {
-            timer.stop();
-        }
-    }
-    	
-    private void checkCollision() {
- 
-        for (int z = dots; z > 0; z--) {
- 
-            if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
+
+        for (int i = 0; i < 20; i++) {
+            if ((x[0] == obsX[i]) && (y[0] == obsY[i])) {
+
                 inGame = false;
             }
         }
- 
-        if (y[0] >= B_HEIGHT) {
-            inGame = false;
-        }
- 
-        if (y[0] < 70) {
-            inGame = false;
-        }
- 
-        if (x[0] >= B_WIDTH) {
-            inGame = false;
-        }
- 
-        if (x[0] < 0) {
-            inGame = false;
-        }
- 
+
         if (!inGame) {
             timer.stop();
         }
     }
- 
+
+    private void checkCollision() {
+
+        for (int z = dots; z > 0; z--) {
+
+            if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
+                inGame = false;
+            }
+        }
+
+        if (y[0] >= B_HEIGHT) {
+            inGame = false;
+        }
+
+        if (y[0] < 70) {
+            inGame = false;
+        }
+
+        if (x[0] >= B_WIDTH) {
+            inGame = false;
+        }
+
+        if (x[0] < 0) {
+            inGame = false;
+        }
+
+        if (!inGame) {
+            timer.stop();
+        }
+    }
+
     private void locateApple() {
- 
+
         int r = (int) (Math.random() * RAND_POS);
         apple_x = ((r * DOT_SIZE));
- 
+
         r = (int) (Math.random() * RAND_POS);
         apple_y = ((r * DOT_SIZE) + 80);
     }
- 
-    private void locateObstacle()
-    {
-    	int s = (int) (Math.random() * RAND_POS);
+
+    private void locateObstacle() {
+        int s = (int) (Math.random() * RAND_POS);
         obs_x = ((s * DOT_SIZE));
- 
+
         s = (int) (Math.random() * RAND_POS);
         obs_y = ((s * DOT_SIZE) + 80);
     }
-    
+
     @Override
-    public void actionPerformed(ActionEvent e) {
- 
+    public void actionPerformed(final ActionEvent e) {
+
         if (inGame) {
- 
             checkApple();
             checkCollision();
             checkObstacle();
-            
+
             move();
+            
+            timeCounter.actionPerformed();
         }
- 
+
         repaint();
     }
- 
+
     private class TAdapter extends KeyAdapter {
- 
+
         @Override
-        public void keyPressed(KeyEvent e) {
- 
-            int key = e.getKeyCode();	// Input Key (Analog)
- 
-            if(inGame == true) {	
+        public void keyPressed(final KeyEvent e) {
 
-        		if ((key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && (!rightDirection)) {
+            final int key = e.getKeyCode(); // Input Key (Analog)
 
-        			leftDirection = true;
-	                upDirection = false;
-	                downDirection = false;
-	            }
+            if (inGame == true) {
 
-	            if ((key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && (!leftDirection)) {
-	                rightDirection = true;
-	                upDirection = false;
-	                downDirection = false;
-	            }
+                if ((key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && (!rightDirection)) {
 
-	            if ((key == KeyEvent.VK_UP || key == KeyEvent.VK_W) && (!downDirection)) {
-	                upDirection = true;
-	                rightDirection = false;
-	                leftDirection = false;
-	            }
+                    leftDirection = true;
+                    upDirection = false;
+                    downDirection = false;
+                }
 
-	            if ((key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && (!upDirection)) {
-	                downDirection = true;
-	                rightDirection = false;
-	                leftDirection = false;
-	            }
-        	}
-        	else {
+                if ((key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && (!leftDirection)) {
+                    rightDirection = true;
+                    upDirection = false;
+                    downDirection = false;
+                }
 
-        		if (key == KeyEvent.VK_SPACE) {
-	                inGame = true;
-	                inMenu = false;
-	                onFire = false;
-	                upDirection = false;
-	                downDirection = false;
-	                leftDirection = false;
-	                rightDirection = true;
-	                timer.stop();
-	                initGame();
-	            }
-        	}
+                if ((key == KeyEvent.VK_UP || key == KeyEvent.VK_W) && (!downDirection)) {
+                    upDirection = true;
+                    rightDirection = false;
+                    leftDirection = false;
+                }
+
+                if ((key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && (!upDirection)) {
+                    downDirection = true;
+                    rightDirection = false;
+                    leftDirection = false;
+                }
+            } 
+            else {
+
+                if (key == KeyEvent.VK_SPACE) {
+                    inGame = true;
+                    inMenu = false;
+                    onFire = false;
+                    upDirection = false;
+                    downDirection = false;
+                    leftDirection = false;
+                    rightDirection = true;
+                    timer.stop();
+                    initGame();
+                }
+            }
         }
     }
-    
+
     public class MouseInput implements MouseListener {
 
-		@Override
-    	public void mouseClicked(MouseEvent e) {
-    		
-    	}
+        @Override
+        public void mouseClicked(final MouseEvent e) {
 
-    	@Override
-    	public void mousePressed(MouseEvent e) {
-    		if(inMenu == true)
-    		{
-    			int mx = e.getX();
-        		int my = e.getY();
-        		System.out.println(mx);
-        		System.out.println(my);
-        		
-        		if(mx >= 110 && mx <= 380)
-        		{
-        			if(my >= 240 && my <= 300)
-        			{
-        				inGame = true;
-        				inMenu = false;
-        				initGame();
+        }
+
+        @Override
+        public void mousePressed(final MouseEvent e) {
+            if (inMenu == true) {
+                final int mx = e.getX();
+                final int my = e.getY();
+                System.out.println(mx);
+                System.out.println(my);
+
+                if (mx >= 110 && mx <= 380) {
+                    if (my >= 240 && my <= 300) {
+                        inGame = true;
+                        inMenu = false;
+                        typeG = 1;
+                        initGame();
                     }
                 }
-    		}
-    	}
 
-    	@Override
-    	public void mouseReleased(MouseEvent e) {
-    		
-    	}
+                if (mx >= 110 && mx <= 380) {
+                    if (my >= 320 && my <= 380) {
+                        inGame = true;
+                        inMenu = false;
+                        typeG = 2;
+                        initGame();
+                    }
+                }
+            }
+        }
 
-    	@Override
-    	public void mouseEntered(MouseEvent e) {
-    		
-    	}
+        @Override
+        public void mouseReleased(final MouseEvent e) {
 
-    	@Override
-    	public void mouseExited(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseEntered(final MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(final MouseEvent e) {
     		
     	}
     }    

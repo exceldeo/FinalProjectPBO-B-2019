@@ -112,7 +112,7 @@ public class Board extends JPanel implements ActionListener {
         final ImageIcon iig = new ImageIcon("src/resources/images/gold_apple.png");
         g_apple = iig.getImage();
 
-        final ImageIcon iih = new ImageIcon("src/resources/images/head.png");
+        final ImageIcon iih = new ImageIcon("src/resources/images/righthead.png");
         head = iih.getImage();
 
         final ImageIcon iio = new ImageIcon("src/resources/images/obstacle.png");
@@ -289,7 +289,7 @@ public class Board extends JPanel implements ActionListener {
 
         g.setFont(smallFont);
         g.setColor(new Color(96, 128, 255));
-        ts = "Time: " + timeCounter.result();
+        ts = "Time: " + timeCounter.reslt();
         g.drawString(ts, SCREEN_SIZE / 5 + 180, SCREEN_SIZE / 10);
     }
 
@@ -323,7 +323,7 @@ public class Board extends JPanel implements ActionListener {
         else if (typeG == 2) {
 
             final String msg = "Game Over !";
-            final String msg1 = "Score : " + score + "    Time: " + timeCounter.result();
+            final String msg1 = "Score : " + score + "    Time: " + timeCounter.reslt();
             final Font small = new Font("Helvetica", Font.BOLD, 20);
             final FontMetrics metr = getFontMetrics(small);
 
@@ -535,24 +535,35 @@ public class Board extends JPanel implements ActionListener {
 
                 if ((key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && (!rightDirection)) {
 
+                    final ImageIcon iih = new ImageIcon("src/resources/images/lefthead.png");
+                    head = iih.getImage();
                     leftDirection = true;
                     upDirection = false;
                     downDirection = false;
                 }
 
                 if ((key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && (!leftDirection)) {
+                	
+                    final ImageIcon iih = new ImageIcon("src/resources/images/righthead.png");
+                    head = iih.getImage();
                     rightDirection = true;
                     upDirection = false;
                     downDirection = false;
                 }
 
                 if ((key == KeyEvent.VK_UP || key == KeyEvent.VK_W) && (!downDirection)) {
+                	
+                    final ImageIcon iih = new ImageIcon("src/resources/images/uphead.png");
+                    head = iih.getImage();
                     upDirection = true;
                     rightDirection = false;
                     leftDirection = false;
                 }
 
                 if ((key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && (!upDirection)) {
+                	
+                    final ImageIcon iih = new ImageIcon("src/resources/images/downhead.png");
+                    head = iih.getImage();
                     downDirection = true;
                     rightDirection = false;
                     leftDirection = false;
@@ -561,7 +572,10 @@ public class Board extends JPanel implements ActionListener {
             else {
 
                 if (key == KeyEvent.VK_SPACE) {
-                    inGame = true;
+
+                	final ImageIcon iih = new ImageIcon("src/resources/images/righthead.png");
+                    head = iih.getImage();
+                	inGame = true;
                     inMenu = false;
                     onFire = false;
                     upDirection = false;

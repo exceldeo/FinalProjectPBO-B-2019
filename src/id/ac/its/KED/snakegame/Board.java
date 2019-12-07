@@ -49,6 +49,8 @@ public class Board extends JPanel implements ActionListener {
     private final int y[] = new int[ALL_DOTS];
     private final int obsX[] = new int[20];
     private final int obsY[] = new int[20];
+    private final int obsXP[] = new int[182];
+    private final int obsYP[] = new int[182];
 
     private int dots;
     private int apple_x;
@@ -79,6 +81,9 @@ public class Board extends JPanel implements ActionListener {
 
     private Menu menu;
 
+    private NormalHs normalhs;
+    private TimeHs timehs;
+    
     public Board() {
 
         initBoard();
@@ -98,6 +103,9 @@ public class Board extends JPanel implements ActionListener {
 
         menu = new Menu();
 
+        normalhs = new NormalHs();
+        timehs = new TimeHs();
+        
         initGame();
     }
 
@@ -154,9 +162,33 @@ public class Board extends JPanel implements ActionListener {
                 y[z] = 80;
             }
 
-            for (int i = 0; i < 20; i++) {
-                obsX[i] = 0;
-                obsY[i] = 0;
+            if (typeG == 1)
+            {
+            	for (int i = 0; i < 20; i++) {
+                    obsX[i] = 0;
+                    obsY[i] = 0;
+                }
+            }
+            else if (typeG == 2)
+            {
+            	obsXP[0] = 0;
+                obsYP[0] = 70;
+            	for (int i = 1; i < 43; i++) {
+                    obsXP[i] = 0;
+                    obsYP[i] = obsYP[i - 1] + 10;
+                }
+            	for (int i = 43; i < 92; i++) {
+                    obsXP[i] = obsXP[i - 1] + 10;
+                    obsYP[i] = 70;
+                }
+            	for (int i = 92; i < 134; i++) {
+                    obsXP[i] = obsXP[i - 1];
+                    obsYP[i] = obsYP[i - 1] + 10;
+                }
+            	for (int i = 134; i < 182; i++) {
+                    obsXP[i] = obsXP[i - 1] - 10;
+                    obsYP[i] = obsYP[i - 1];
+                }
             }
 
             locateApple();
@@ -234,7 +266,10 @@ public class Board extends JPanel implements ActionListener {
                     }
 
                     // --> Bagian untuk syntax obstacles
-
+                    for (int a = 0; a < 182; a++) {
+                        g.drawImage(obstacle, obsXP[a], obsYP[a], this);
+                    }
+                    
                     for (int z = 0; z < dots; z++) {
                         if (z == 0) {
 
@@ -250,7 +285,11 @@ public class Board extends JPanel implements ActionListener {
 
             } else {
 
+            	timer.stop();					// Matikan Game Loop
                 gameOver(g);
+                     
+//                System.out.print(inGame);
+//                System.out.print(inMenu);
             }
         }
     }
@@ -289,25 +328,26 @@ public class Board extends JPanel implements ActionListener {
 
         g.setFont(smallFont);
         g.setColor(new Color(96, 128, 255));
-        ts = "Time: " + timeCounter.reslt();
+        ts = "Time: " + timeCounter.result();
         g.drawString(ts, SCREEN_SIZE / 5 + 180, SCREEN_SIZE / 10);
     }
 
     private void gameOver(final Graphics g) { // Game Over UI
 
+    	final Font small = new Font("Helvetica", Font.BOLD, 20);
+    	final FontMetrics metr = getFontMetrics(small);
+    	g.setColor(Color.white);
+        g.setFont(small);
+    	
+    	final String retry = "Press Spacebar to retry";
+    	
         if (typeG == 1) {
 
             final String msg = "Game Over !";
             final String msg1 = "Score : " + score;
-            final String msg2 = "Press Spacebar to retry";
-            final Font small = new Font("Helvetica", Font.BOLD, 20);
-            final FontMetrics metr = getFontMetrics(small);
-
-            g.setColor(Color.white);
-            g.setFont(small);
+            
             g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2 - 40);
-            g.drawString(msg2, (B_WIDTH - metr.stringWidth(msg)) / 2 - 50, (B_HEIGHT / 2) + 60);
-
+              
             if (score < 10) {
 
                 g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2);
@@ -318,19 +358,19 @@ public class Board extends JPanel implements ActionListener {
 
                 g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2);
             }
+            
+            g.drawString(retry, (B_WIDTH - metr.stringWidth(retry)) / 2 , (B_HEIGHT / 2) + 50);
+            
+            normalhs.render(g);
         }
 
         else if (typeG == 2) {
 
             final String msg = "Game Over !";
-            final String msg1 = "Score : " + score + "    Time: " + timeCounter.reslt();
-            final Font small = new Font("Helvetica", Font.BOLD, 20);
-            final FontMetrics metr = getFontMetrics(small);
+            final String msg1 = "Score : " + score + "    Time: " + timeCounter.result();
 
-            g.setColor(Color.white);
-            g.setFont(small);
             g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
-
+            
             if (score < 10) {
 
                 g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2 + 40);
@@ -341,8 +381,11 @@ public class Board extends JPanel implements ActionListener {
 
                 g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2 - 10, B_HEIGHT / 2 + 40);
             }
+            
+            g.drawString(retry, (B_WIDTH - metr.stringWidth(retry)) / 2 , (B_HEIGHT / 2) + 90);
+            
+            timehs.render(g);
         }
-
     }
 
     private void move() {
@@ -408,6 +451,26 @@ public class Board extends JPanel implements ActionListener {
 
                     onFire = false;
                 }
+                
+                if (score >= 1) {
+                    for (int i = 0; i < 20; i++) {
+                        locateObstacle();
+                        obsX[i] = obs_x;
+                        obsY[i] = obs_y;
+
+                        if (obsX[i] <= x[0] + 10 && obsX[i] >= x[0] - 10 && obsY[i] <= y[0] + 10 && obsY[i] >= y[0] - 10) {
+                            locateObstacle();
+                            obsX[i] = obs_x;
+                            obsY[i] = obs_y;
+                        }
+
+                        if (obsX[i] == apple_x && obsY[i] == apple_y) {
+                            locateObstacle();
+                            obsX[i] = obs_x;
+                            obsY[i] = obs_y;
+                        }
+                    }
+                }
             }
 
             else if (typeG == 2) {
@@ -424,37 +487,29 @@ public class Board extends JPanel implements ActionListener {
                     onFire = false;
                 }
             }
-
-            if (score >= 1) {
-                for (int i = 0; i < 20; i++) {
-                    locateObstacle();
-                    obsX[i] = obs_x;
-                    obsY[i] = obs_y;
-
-                    if (obsX[i] <= x[0] + 10 && obsX[i] >= x[0] - 10 && obsY[i] <= y[0] + 10 && obsY[i] >= y[0] - 10) {
-                        locateObstacle();
-                        obsX[i] = obs_x;
-                        obsY[i] = obs_y;
-                    }
-
-                    if (obsX[i] == apple_x && obsY[i] == apple_y) {
-                        locateObstacle();
-                        obsX[i] = obs_x;
-                        obsY[i] = obs_y;
-                    }
-                }
-            }
         }
     }
 
     private void checkObstacle() {
 
-        for (int i = 0; i < 20; i++) {
-            if ((x[0] == obsX[i]) && (y[0] == obsY[i])) {
+    	if (typeG == 1)
+    	{
+    		for (int i = 0; i < 20; i++) {
+                if ((x[0] == obsX[i]) && (y[0] == obsY[i])) {
 
-                inGame = false;
+                    inGame = false;
+                }
             }
-        }
+    	}
+    	else if (typeG == 2)
+    	{
+    		for (int i = 0; i < 182; i++) {
+                if ((x[0] == obsXP[i]) && (y[0] == obsYP[i])) {
+
+                    inGame = false;
+                }
+            }
+    	}
 
         if (!inGame) {
             timer.stop();
@@ -535,8 +590,9 @@ public class Board extends JPanel implements ActionListener {
 
                 if ((key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) && (!rightDirection)) {
 
-                    final ImageIcon iih = new ImageIcon("src/resources/images/lefthead.png");
+                	final ImageIcon iih = new ImageIcon("src/resources/images/lefthead.png");
                     head = iih.getImage();
+                    
                     leftDirection = true;
                     upDirection = false;
                     downDirection = false;
@@ -544,8 +600,9 @@ public class Board extends JPanel implements ActionListener {
 
                 if ((key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) && (!leftDirection)) {
                 	
-                    final ImageIcon iih = new ImageIcon("src/resources/images/righthead.png");
+                	final ImageIcon iih = new ImageIcon("src/resources/images/righthead.png");
                     head = iih.getImage();
+                    
                     rightDirection = true;
                     upDirection = false;
                     downDirection = false;
@@ -553,8 +610,9 @@ public class Board extends JPanel implements ActionListener {
 
                 if ((key == KeyEvent.VK_UP || key == KeyEvent.VK_W) && (!downDirection)) {
                 	
-                    final ImageIcon iih = new ImageIcon("src/resources/images/uphead.png");
+                	final ImageIcon iih = new ImageIcon("src/resources/images/uphead.png");
                     head = iih.getImage();
+                    
                     upDirection = true;
                     rightDirection = false;
                     leftDirection = false;
@@ -562,8 +620,9 @@ public class Board extends JPanel implements ActionListener {
 
                 if ((key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) && (!upDirection)) {
                 	
-                    final ImageIcon iih = new ImageIcon("src/resources/images/downhead.png");
+                	final ImageIcon iih = new ImageIcon("src/resources/images/downhead.png");
                     head = iih.getImage();
+                    
                     downDirection = true;
                     rightDirection = false;
                     leftDirection = false;
@@ -572,10 +631,11 @@ public class Board extends JPanel implements ActionListener {
             else {
 
                 if (key == KeyEvent.VK_SPACE) {
-
+                	
                 	final ImageIcon iih = new ImageIcon("src/resources/images/righthead.png");
                     head = iih.getImage();
-                	inGame = true;
+                    
+                    inGame = true;
                     inMenu = false;
                     onFire = false;
                     upDirection = false;
@@ -598,11 +658,12 @@ public class Board extends JPanel implements ActionListener {
 
         @Override
         public void mousePressed(final MouseEvent e) {
+        	
             if (inMenu == true) {
                 final int mx = e.getX();
                 final int my = e.getY();
-                System.out.println(mx);
-                System.out.println(my);
+//                System.out.println(mx);
+//                System.out.println(my);
 
                 if (mx >= 110 && mx <= 380) {
                     if (my >= 240 && my <= 300) {

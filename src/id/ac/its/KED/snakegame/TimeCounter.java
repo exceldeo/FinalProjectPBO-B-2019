@@ -20,7 +20,7 @@ public class TimeCounter implements ActionListener {
         clock.start();
     }
 
-    public String reslt()
+    public String result()
     {
         return hours + ":" + min + ":" + sec;
     }

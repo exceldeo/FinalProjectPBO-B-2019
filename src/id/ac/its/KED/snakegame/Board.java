@@ -154,7 +154,7 @@ public class Board extends JPanel implements ActionListener {
             score = 0;
             dots = 3;
             gold = 5;
-            health = 300;
+            health = 150;
 
             for (int z = 0; z < dots; z++) {
 
@@ -236,6 +236,7 @@ public class Board extends JPanel implements ActionListener {
 
                     if (score >= 1) {
                         for (int a = 0; a < 20; a++) {
+                        	
                             g.drawImage(obstacle, obsX[a], obsY[a], this);
                         }
                     }
@@ -267,6 +268,7 @@ public class Board extends JPanel implements ActionListener {
 
                     // --> Bagian untuk syntax obstacles
                     for (int a = 0; a < 182; a++) {
+                    	
                         g.drawImage(obstacle, obsXP[a], obsYP[a], this);
                     }
                     
@@ -295,23 +297,23 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void drawScore(final Graphics2D g) {
+    	
         String s;
 
         g.setFont(smallFont);
         g.setColor(new Color(96, 128, 255));
         s = "Score: " + score;
-        g.drawString(s, SCREEN_SIZE / 5, SCREEN_SIZE / 10);
+        g.drawString(s, SCREEN_SIZE / 7, SCREEN_SIZE / 10);
     }
 
     private void drawHealth(final Graphics2D g) {
+    	
         String h;
 
-        g.setFont(smallFont);
-
-        if (health > 200) {
+        if (health > 100) {
 
             g.setColor(new Color(96, 128, 255));
-        } else if (health > 100 && health <= 200) {
+        } else if (health > 50 && health <= 100) {
 
             g.setColor(new Color(255, 255, 0));
         } else {
@@ -319,11 +321,15 @@ public class Board extends JPanel implements ActionListener {
             g.setColor(new Color(255, 0, 0));
         }
 
-        h = "Health: " + health;
-        g.drawString(h, SCREEN_SIZE / 3 + 100, SCREEN_SIZE / 10);
+        g.drawRect(290, 27, 150, 20);
+        g.fillRect(290, 27, health, 20);
+        
+        h = "Health: ";
+        g.drawString(h, SCREEN_SIZE / 4 + 85, SCREEN_SIZE / 10);
     }
 
     private void drawTimeCounter(final Graphics2D g) {
+    	
         String ts;
 
         g.setFont(smallFont);
@@ -425,6 +431,7 @@ public class Board extends JPanel implements ActionListener {
             {
                 health--;
             } else {
+            	
                 inGame = false;
             }
         }
@@ -437,20 +444,36 @@ public class Board extends JPanel implements ActionListener {
             if (typeG == 1) {
 
                 dots++;
-                health += 15;
                 locateApple();
 
                 if (dots == gold) {
                     score += 10;
                     gold += 5;
-                    health += 20;
-
+                    if(health + 50 > 150)
+                    {
+                    	health = 150;
+                    }
+                    else
+                    {
+                    	health += 50;
+                    }
+                    
                     onFire = true;
                 } else {
                     score++;
-
+                    if(health + 30 > 150)
+                    {
+                    	health = 150;
+                    }
+                    else
+                    {
+                    	health += 30;
+                    }
+                    
                     onFire = false;
                 }
+                
+
                 
                 if (score >= 1) {
                     for (int i = 0; i < 20; i++) {

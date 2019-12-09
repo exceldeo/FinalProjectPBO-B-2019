@@ -16,7 +16,7 @@ public class TimeCounter implements ActionListener {
         this.min = min;
         this.sec = sec;
 
-        clock = new Timer(15, this);
+        clock = new Timer(1000, this);
         clock.start();
     }
 

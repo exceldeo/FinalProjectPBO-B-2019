@@ -49,8 +49,8 @@ public class Board extends JPanel implements ActionListener {
     private final int y[] = new int[ALL_DOTS];
     private final int obsX[] = new int[20];
     private final int obsY[] = new int[20];
-    private final int obsXP[] = new int[182];
-    private final int obsYP[] = new int[182];
+    private final int obsXP[] = new int[320];
+    private final int obsYP[] = new int[320];
 
     private int dots;
     private int apple_x;
@@ -68,7 +68,6 @@ public class Board extends JPanel implements ActionListener {
     private boolean downDirection = false;
     public boolean inGame = false;
     public boolean inMenu = true;
-//    public boolean inHs = false;
     private boolean onFire = false;
 
     private Timer timer;
@@ -190,6 +189,26 @@ public class Board extends JPanel implements ActionListener {
                     obsXP[i] = obsXP[i - 1] - 10;
                     obsYP[i] = obsYP[i - 1];
                 }
+                for (int i = 183; i < 210; i++) {
+                    obsXP[i] = obsXP[i - 38] + 10;
+                    obsYP[i] = 200;
+                }
+                for (int i = 211; i < 238; i++) {
+                    obsXP[i] = obsXP[i - 66] + 10;
+                    obsYP[i] = 210;
+                }
+                for (int i = 239; i < 266; i++) {
+                    obsXP[i] = obsXP[i - 94] + 10;
+                    obsYP[i] = 350;
+                }
+                for (int i = 267; i < 294; i++) {
+                    obsXP[i] = obsXP[i - 122] + 10;
+                    obsYP[i] = 360;
+                }
+                for (int i = 295; i < 304; i++) {
+                    obsXP[i] = obsXP[i - 74] + 10;
+                    obsYP[i] = 280;
+                }
             }
 
             locateApple();
@@ -206,15 +225,14 @@ public class Board extends JPanel implements ActionListener {
         doDrawing(g);
     }
 
-    private void doDrawing(final Graphics g) {
+    private void doDrawing(final Graphics g) { // Drawing the snake
 
         final Graphics2D g2d = (Graphics2D) g;
 
         if (inMenu) {
 
-        	menu.render(g);        
+            menu.render(g);
         } else {
-    	
             if (inGame) {
 
                 g.setColor(Color.white);
@@ -269,7 +287,7 @@ public class Board extends JPanel implements ActionListener {
                     }
 
                     // --> Bagian untuk syntax obstacles
-                    for (int a = 0; a < 182; a++) {
+                    for (int a = 0; a < 320; a++) {
                     	
                         g.drawImage(obstacle, obsXP[a], obsYP[a], this);
                     }
@@ -369,8 +387,7 @@ public class Board extends JPanel implements ActionListener {
             
             g.drawString(retry, (B_WIDTH - metr.stringWidth(retry)) / 2 , (B_HEIGHT / 2) + 50);
             
-            normalhs.getData();
-            normalhs.renderGame(g);
+            normalhs.render(g);
         }
 
         else if (typeG == 2) {
@@ -393,8 +410,7 @@ public class Board extends JPanel implements ActionListener {
             
             g.drawString(retry, (B_WIDTH - metr.stringWidth(retry)) / 2 , (B_HEIGHT / 2) + 90);
             
-            timehs.getData();
-            timehs.renderGame(g);
+            timehs.render(g);
         }
     }
 
@@ -410,6 +426,7 @@ public class Board extends JPanel implements ActionListener {
             timer.stop();
             timer = new Timer(SPRINT, this);
             timer.start();
+
         } else {
 
             timer.stop();
@@ -530,7 +547,7 @@ public class Board extends JPanel implements ActionListener {
     	}
     	else if (typeG == 2)
     	{
-    		for (int i = 0; i < 182; i++) {
+    		for (int i = 0; i < 320; i++) {
                 if ((x[0] == obsXP[i]) && (y[0] == obsYP[i])) {
 
                     inGame = false;
@@ -670,9 +687,6 @@ public class Board extends JPanel implements ActionListener {
                     leftDirection = false;
                     rightDirection = true;
                     timer.stop();
-                    
-                    timehs.reset();
-                    normalhs.reset();
                     initGame();
                 }
             }
@@ -710,13 +724,6 @@ public class Board extends JPanel implements ActionListener {
                         inMenu = false;
                         typeG = 2;
                         initGame();
-                    }
-                }
-                
-                if (mx >= 110 && mx <= 380) {
-                    if (my >= 400 && my <= 460) {
-
-                    	System.out.println("Highscore");
                     }
                 }
             }

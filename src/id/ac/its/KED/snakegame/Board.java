@@ -68,6 +68,7 @@ public class Board extends JPanel implements ActionListener {
     private boolean downDirection = false;
     public boolean inGame = false;
     public boolean inMenu = true;
+//    public boolean inHs = false;
     private boolean onFire = false;
 
     private Timer timer;
@@ -205,14 +206,15 @@ public class Board extends JPanel implements ActionListener {
         doDrawing(g);
     }
 
-    private void doDrawing(final Graphics g) { // Drawing the snake
+    private void doDrawing(final Graphics g) {
 
         final Graphics2D g2d = (Graphics2D) g;
 
         if (inMenu) {
 
-            menu.render(g);
+        	menu.render(g);        
         } else {
+    	
             if (inGame) {
 
                 g.setColor(Color.white);
@@ -367,7 +369,8 @@ public class Board extends JPanel implements ActionListener {
             
             g.drawString(retry, (B_WIDTH - metr.stringWidth(retry)) / 2 , (B_HEIGHT / 2) + 50);
             
-            normalhs.render(g);
+            normalhs.getData();
+            normalhs.renderGame(g);
         }
 
         else if (typeG == 2) {
@@ -390,7 +393,8 @@ public class Board extends JPanel implements ActionListener {
             
             g.drawString(retry, (B_WIDTH - metr.stringWidth(retry)) / 2 , (B_HEIGHT / 2) + 90);
             
-            timehs.render(g);
+            timehs.getData();
+            timehs.renderGame(g);
         }
     }
 
@@ -666,6 +670,9 @@ public class Board extends JPanel implements ActionListener {
                     leftDirection = false;
                     rightDirection = true;
                     timer.stop();
+                    
+                    timehs.reset();
+                    normalhs.reset();
                     initGame();
                 }
             }
@@ -703,6 +710,13 @@ public class Board extends JPanel implements ActionListener {
                         inMenu = false;
                         typeG = 2;
                         initGame();
+                    }
+                }
+                
+                if (mx >= 110 && mx <= 380) {
+                    if (my >= 400 && my <= 460) {
+
+                    	System.out.println("Highscore");
                     }
                 }
             }

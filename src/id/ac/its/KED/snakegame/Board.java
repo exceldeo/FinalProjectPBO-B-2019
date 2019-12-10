@@ -76,6 +76,7 @@ public class Board extends JPanel implements ActionListener {
     private Image head;
     private Image g_apple;
     private Image obstacle;
+    private Image header;
 
     private TimeCounter timeCounter;
 
@@ -125,6 +126,9 @@ public class Board extends JPanel implements ActionListener {
 
         final ImageIcon iio = new ImageIcon("src/resources/images/obstacle.png");
         obstacle = iio.getImage();
+        
+        final ImageIcon iiheader = new ImageIcon("src/resources/images/header.png");
+        header = iiheader.getImage();
     }
 
     private void backgroundMusic() {
@@ -238,8 +242,9 @@ public class Board extends JPanel implements ActionListener {
                 g.setColor(Color.white);
                 g.drawRect(0, 70, 498, 430);
 
-                g.setColor(Color.LIGHT_GRAY);
-                g.fillRect(0, 0, 499, 69);
+//                g.setColor(Color.LIGHT_GRAY);
+//                g.fillRect(0, 0, 499, 69);
+                g.drawImage(header, 0, 0, 500, 70, this); // UI HEADER
 
                 if (typeG == 1) {
 

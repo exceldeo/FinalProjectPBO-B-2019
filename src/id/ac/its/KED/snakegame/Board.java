@@ -387,7 +387,7 @@ public class Board extends JPanel implements ActionListener {
             
             g.drawString(retry, (B_WIDTH - metr.stringWidth(retry)) / 2 , (B_HEIGHT / 2) + 50);
             
-            normalhs.render(g);
+//            normalhs.render(g);
         }
 
         else if (typeG == 2) {
@@ -410,7 +410,7 @@ public class Board extends JPanel implements ActionListener {
             
             g.drawString(retry, (B_WIDTH - metr.stringWidth(retry)) / 2 , (B_HEIGHT / 2) + 90);
             
-            timehs.render(g);
+//            timehs.render(g);
         }
     }
 

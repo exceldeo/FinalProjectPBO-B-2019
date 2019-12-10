@@ -77,6 +77,7 @@ public class Board extends JPanel implements ActionListener {
     private Image g_apple;
     private Image obstacle;
     private Image header;
+    private Image backGroundGame;
 
     private TimeCounter timeCounter;
 
@@ -127,6 +128,9 @@ public class Board extends JPanel implements ActionListener {
         final ImageIcon iio = new ImageIcon("src/resources/images/obstacle.png");
         obstacle = iio.getImage();
         
+        final ImageIcon iib = new ImageIcon("src/resources/images/backgroundgame.png");
+        backGroundGame = iib.getImage();
+
         final ImageIcon iiheader = new ImageIcon("src/resources/images/header.png");
         header = iiheader.getImage();
     }
@@ -248,6 +252,7 @@ public class Board extends JPanel implements ActionListener {
 
                 if (typeG == 1) {
 
+                    g.drawImage(backGroundGame, 0, 70, 500, 500, this);
                     drawScore(g2d);
                     drawHealth(g2d);
 
@@ -392,7 +397,8 @@ public class Board extends JPanel implements ActionListener {
             
             g.drawString(retry, (B_WIDTH - metr.stringWidth(retry)) / 2 , (B_HEIGHT / 2) + 50);
             
-//            normalhs.render(g);
+            normalhs.getData();
+            normalhs.renderGame(g);
         }
 
         else if (typeG == 2) {
@@ -415,7 +421,8 @@ public class Board extends JPanel implements ActionListener {
             
             g.drawString(retry, (B_WIDTH - metr.stringWidth(retry)) / 2 , (B_HEIGHT / 2) + 90);
             
-//            timehs.render(g);
+            timehs.getData();
+            timehs.renderGame(g);
         }
     }
 
@@ -535,6 +542,13 @@ public class Board extends JPanel implements ActionListener {
                 } else {
                     onFire = false;
                 }
+
+                for (int i = 0 ; i < 320 ; i++) {
+                    if (obsXP[i] == apple_x && obsYP[i] == apple_y) {
+                        locateApple();
+                    }
+                }
+
             }
         }
     }
@@ -691,6 +705,8 @@ public class Board extends JPanel implements ActionListener {
                     downDirection = false;
                     leftDirection = false;
                     rightDirection = true;
+                    timehs.reset();
+                    normalhs.reset();
                     timer.stop();
                     initGame();
                 }
@@ -711,8 +727,8 @@ public class Board extends JPanel implements ActionListener {
             if (inMenu == true) {
                 final int mx = e.getX();
                 final int my = e.getY();
-//                System.out.println(mx);
-//                System.out.println(my);
+            //    System.out.println(mx);
+            //    System.out.println(my);
 
                 if (mx >= 110 && mx <= 380) {
                     if (my >= 240 && my <= 300) {
@@ -729,6 +745,12 @@ public class Board extends JPanel implements ActionListener {
                         inMenu = false;
                         typeG = 2;
                         initGame();
+                    }
+                }
+
+                if (mx >= 110 && mx <= 380) {
+                    if (my >= 400 && my <= 460) {
+                        System.out.print("HighScore");
                     }
                 }
             }

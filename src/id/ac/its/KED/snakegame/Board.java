@@ -49,8 +49,8 @@ public class Board extends JPanel implements ActionListener {
     private final int y[] = new int[ALL_DOTS];
     private final int obsX[] = new int[20];
     private final int obsY[] = new int[20];
-    private final int obsXP[] = new int[320];
-    private final int obsYP[] = new int[320];
+    private final int obsXP[] = new int[299];
+    private final int obsYP[] = new int[299];
 
     private int dots;
     private int apple_x;
@@ -191,39 +191,48 @@ public class Board extends JPanel implements ActionListener {
             	obsXP[0] = 0;
                 obsYP[0] = 70;
             	for (int i = 1; i < 43; i++) {
+            		
                     obsXP[i] = 0;
                     obsYP[i] = obsYP[i - 1] + 10;
                 }
             	for (int i = 43; i < 92; i++) {
+            		
                     obsXP[i] = obsXP[i - 1] + 10;
                     obsYP[i] = 70;
                 }
             	for (int i = 92; i < 134; i++) {
+            		
                     obsXP[i] = obsXP[i - 1];
                     obsYP[i] = obsYP[i - 1] + 10;
                 }
             	for (int i = 134; i < 182; i++) {
+            		
                     obsXP[i] = obsXP[i - 1] - 10;
                     obsYP[i] = obsYP[i - 1];
                 }
-                for (int i = 183; i < 210; i++) {
-                    obsXP[i] = obsXP[i - 38] + 10;
+                for (int i = 182; i < 209; i++) {
+                	
+                    obsXP[i] = obsXP[i - 37] + 10;
                     obsYP[i] = 200;
                 }
-                for (int i = 211; i < 238; i++) {
-                    obsXP[i] = obsXP[i - 66] + 10;
+                for (int i = 209; i < 236; i++) {
+                	
+                    obsXP[i] = obsXP[i - 64] + 10;
                     obsYP[i] = 210;
                 }
-                for (int i = 239; i < 266; i++) {
-                    obsXP[i] = obsXP[i - 94] + 10;
+                for (int i = 236; i < 263; i++) {
+                	
+                    obsXP[i] = obsXP[i - 91] + 10;
                     obsYP[i] = 350;
                 }
-                for (int i = 267; i < 294; i++) {
-                    obsXP[i] = obsXP[i - 122] + 10;
+                for (int i = 263; i < 290; i++) {
+                	
+                    obsXP[i] = obsXP[i - 118] + 10;
                     obsYP[i] = 360;
                 }
-                for (int i = 295; i < 304; i++) {
-                    obsXP[i] = obsXP[i - 74] + 10;
+                for (int i = 290; i < 299; i++) {
+                	
+                    obsXP[i] = obsXP[i - 71] + 10;
                     obsYP[i] = 280;
                 }
             }
@@ -308,8 +317,11 @@ public class Board extends JPanel implements ActionListener {
                     }
 
                     // --> Bagian untuk syntax obstacles
-                    for (int a = 0; a < 320; a++) {
-                    	
+                    for (int a = 0; a < 299; a++) {
+                    	if(obsXP[a] == 0 && obsYP[a] == 0)
+                    	{
+                    		System.out.println(a + "ini error");
+                    	}
                         g.drawImage(obstacle2, obsXP[a], obsYP[a], this);
                     }
                     
@@ -551,7 +563,7 @@ public class Board extends JPanel implements ActionListener {
                     onFire = false;
                 }
 
-                for (int i = 0 ; i < 320 ; i++) {
+                for (int i = 0 ; i < 299 ; i++) {
                     if (obsXP[i] == apple_x && obsYP[i] == apple_y) {
                         locateApple();
                     }
@@ -574,7 +586,7 @@ public class Board extends JPanel implements ActionListener {
     	}
     	else if (typeG == 2)
     	{
-    		for (int i = 0; i < 320; i++) {
+    		for (int i = 0; i < 299; i++) {
                 if ((x[0] == obsXP[i]) && (y[0] == obsYP[i])) {
 
                     inGame = false;

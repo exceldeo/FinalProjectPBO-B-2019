@@ -68,6 +68,7 @@ public class Board extends JPanel implements ActionListener {
     private boolean downDirection = false;
     public boolean inGame = false;
     public boolean inMenu = true;
+    public boolean inHs = false;
     private boolean onFire = false;
 
     private Timer timer;
@@ -239,8 +240,10 @@ public class Board extends JPanel implements ActionListener {
 
         if (inMenu) {
 
-            menu.render(g);
+             menu.render(g);
+   
         } else {
+        
             if (inGame) {
 
                 g.setColor(Color.white);
@@ -367,7 +370,7 @@ public class Board extends JPanel implements ActionListener {
         ts = "Time: " + timeCounter.result();
         g.drawString(ts, SCREEN_SIZE / 5 + 180, SCREEN_SIZE / 10);
     }
-
+    
     private void gameOver(final Graphics g) { // Game Over UI
 
     	final Font small = new Font("Helvetica", Font.BOLD, 20);
@@ -724,11 +727,12 @@ public class Board extends JPanel implements ActionListener {
         @Override
         public void mousePressed(final MouseEvent e) {
         	
+        	final int mx = e.getX();
+            final int my = e.getY();
+                System.out.println(mx);
+                System.out.println(my);
+            
             if (inMenu == true) {
-                final int mx = e.getX();
-                final int my = e.getY();
-            //    System.out.println(mx);
-            //    System.out.println(my);
 
                 if (mx >= 110 && mx <= 380) {
                     if (my >= 240 && my <= 300) {
@@ -750,9 +754,32 @@ public class Board extends JPanel implements ActionListener {
 
                 if (mx >= 110 && mx <= 380) {
                     if (my >= 400 && my <= 460) {
-                        System.out.print("HighScore");
+                    	if(inMenu)
+                    	{
+//                    		System.out.print("HighScore");
+                    		inHs = true;
+                    		inMenu = false;
+                    		normalhs.renderMenu(getGraphics());
+                    	}        
                     }
                 }
+            }
+            
+            if (inHs == true && inMenu == false)
+            {
+            	if (mx >= 250 && mx <= 400) {
+                    if (my >= 50 && my <= 100) {
+                    	
+                    	timehs.renderMenu(getGraphics());
+                    }
+            	}
+            	
+            	if (mx >= 90 && mx <= 250) {
+                    if (my >= 50 && my <= 100) {
+                    	
+                    	normalhs.renderMenu(getGraphics());
+                    }
+            	}
             }
         }
 

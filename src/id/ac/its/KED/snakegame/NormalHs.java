@@ -33,7 +33,7 @@ public class NormalHs {
 			i++;
 		}
 	}
-	
+
 	public void renderGame(Graphics g)
 	{
 		

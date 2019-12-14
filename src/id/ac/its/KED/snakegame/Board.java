@@ -57,6 +57,7 @@ public class Board extends JPanel implements ActionListener {
     private int apple_y;
     private int score;
     private int gold;
+    private int blue;
     private int health;
     private int obs_x;
     private int obs_y;
@@ -70,17 +71,20 @@ public class Board extends JPanel implements ActionListener {
     public boolean inMenu = true;
     public boolean inHs = false;
     private boolean onFire = false;
+    private boolean slomo = false;
 
     private Timer timer;
     private Image ball;
-    private Image apple;
     private Image head;
+    private Image apple;
     private Image g_apple;
-    private Image obstacle;
+    private Image b_pill;
     private Image header;
     private Image backGroundGame;
+    private Image obstacle;
     private Image obstacle2;
-    private Image gameOverText;
+    private Image gameOverText;    
+
 
     private TimeCounter timeCounter;
 
@@ -124,6 +128,10 @@ public class Board extends JPanel implements ActionListener {
 
         final ImageIcon iig = new ImageIcon("src/resources/images/gold_apple.png");
         g_apple = iig.getImage();
+        
+        //
+        final ImageIcon iiba = new ImageIcon("src/resources/images/blue_pill.png");
+        b_pill = iiba.getImage();
 
         final ImageIcon iih = new ImageIcon("src/resources/images/righthead.png");
         head = iih.getImage();
@@ -142,6 +150,7 @@ public class Board extends JPanel implements ActionListener {
 
         final ImageIcon iigo = new ImageIcon("src/resources/images/gameover.png");
         gameOverText = iigo.getImage();
+              
     }
 
     private void backgroundMusic() {
@@ -170,7 +179,8 @@ public class Board extends JPanel implements ActionListener {
             timeCounter = new TimeCounter(0, 0, 0);
             score = 0;
             dots = 3;
-            gold = 5;
+            gold = 2;
+            blue = 3;
             health = 150;
 
             for (int z = 0; z < dots; z++) {
@@ -276,10 +286,15 @@ public class Board extends JPanel implements ActionListener {
                     drawScore(g2d);
                     drawHealth(g2d);
 
-                    if (dots == gold - 1) {
+                    if (dots == gold) {
 
                         g.drawImage(g_apple, apple_x, apple_y, this);
-                    } else {
+                    } 
+                    else if(dots == blue)
+                    {
+                    	g.drawImage(b_pill, apple_x, apple_y, this);
+                    }
+                    else {
 
                         g.drawImage(apple, apple_x, apple_y, this);
                     }
@@ -461,9 +476,19 @@ public class Board extends JPanel implements ActionListener {
 
         } else {
 
-            timer.stop();
-            timer = new Timer(DELAY, this);
-            timer.start();
+        	if(slomo == true)
+            {
+            	System.out.println("slow motion");
+            	timer.stop();
+                timer = new Timer(300, this);
+                timer.start();
+            }
+            else
+            {
+            	timer.stop();
+                timer = new Timer(DELAY, this);
+                timer.start();
+            }
         }
 
         if (leftDirection) {
@@ -499,7 +524,7 @@ public class Board extends JPanel implements ActionListener {
                 dots++;
                 locateApple();
 
-                if (dots == gold) {
+                if (dots == gold + 1) {
                     score += 10;
                     gold += 5;
                     if(health + 50 > 150)
@@ -510,9 +535,16 @@ public class Board extends JPanel implements ActionListener {
                     {
                     	health += 50;
                     }
-                    
+                    slomo = false;
                     onFire = true;
-                } else {
+                } 
+                else if(dots == blue + 1)
+                {
+                	score++;
+                	blue += 7;
+                	slomo = true;
+                }
+                else {
                     score++;
                     if(health + 30 > 150)
                     {
@@ -522,9 +554,10 @@ public class Board extends JPanel implements ActionListener {
                     {
                     	health += 30;
                     }
-                    
+                    slomo = false;
                     onFire = false;
                 }
+                
                 
 
                 
@@ -609,22 +642,27 @@ public class Board extends JPanel implements ActionListener {
         }
 
         if (y[0] >= B_HEIGHT) {
-            inGame = false;
+        	
+            y[0] = 70;
         }
 
         if (y[0] < 70) {
-            inGame = false;
+        	
+        	y[0] = B_HEIGHT;
         }
 
         if (x[0] >= B_WIDTH) {
-            inGame = false;
+        	
+        	x[0] = 0;
         }
 
         if (x[0] < 0) {
-            inGame = false;
+        	
+        	x[0] = B_WIDTH;
         }
 
         if (!inGame) {
+        	
             timer.stop();
         }
     }
@@ -746,8 +784,8 @@ public class Board extends JPanel implements ActionListener {
         	
         	final int mx = e.getX();
             final int my = e.getY();
-                System.out.println(mx);
-                System.out.println(my);
+//            System.out.println(mx);
+//            System.out.println(my);
             
             if (inMenu == true) {
 
@@ -776,6 +814,7 @@ public class Board extends JPanel implements ActionListener {
 //                    		System.out.print("HighScore");
                     		inHs = true;
                     		inMenu = false;
+                    		normalhs.getData();
                     		normalhs.renderMenu(getGraphics());
                     	}        
                     }
@@ -786,14 +825,14 @@ public class Board extends JPanel implements ActionListener {
             {
             	if (mx >= 250 && mx <= 400) {
                     if (my >= 50 && my <= 100) {
-                    	
+
                     	timehs.renderMenu(getGraphics());
                     }
             	}
             	
             	if (mx >= 90 && mx <= 250) {
                     if (my >= 50 && my <= 100) {
-                    	
+
                     	normalhs.renderMenu(getGraphics());
                     }
             	}

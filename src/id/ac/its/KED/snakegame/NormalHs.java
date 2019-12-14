@@ -1,5 +1,7 @@
 package id.ac.its.KED.snakegame;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.*;
@@ -14,7 +16,8 @@ public class NormalHs {
 	private int posY = 360;
 	private String[] data = new String[10];
 	private Image normalhsback;
-	 
+
+	
 	public void getData()
 	{
 		
@@ -58,9 +61,21 @@ public class NormalHs {
 	public void renderMenu(Graphics g)
 	{	
 		
-		ImageIcon normhs = new ImageIcon("src/resources/normalhs.png");
+		ImageIcon normhs = new ImageIcon("src/resources/menus/normalhs.png");
         normalhsback = normhs.getImage();
         
         g.drawImage(normalhsback, 0, 0, null);
+        
+        g.setColor(new Color(0, 0, 0));
+        
+        int n=0;
+    	int posY2 = 250;
+    	while(data[n] != null)
+    	{
+    		g.drawString(data[n], 150, posY2);
+    		posY2 += 30;
+    		// System.out.println(data[n]);
+    		n++;
+    	}
 	}
 }

@@ -15,7 +15,7 @@ public class Menu {
 	public void render(Graphics g)
 	{
 		
-		ImageIcon back = new ImageIcon("src/resources/backgroundmenu.png");
+		ImageIcon back = new ImageIcon("src/resources/menus/backgroundmenu.png");
         background = back.getImage();
         
         g.drawImage(background, 0, 0, null);

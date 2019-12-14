@@ -1,5 +1,7 @@
 package id.ac.its.KED.snakegame;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
@@ -59,9 +61,21 @@ public class TimeHs {
 	public void renderMenu(Graphics g)
 	{
 	
-		ImageIcon timehs = new ImageIcon("src/resources/timeattackhs.png");
+		ImageIcon timehs = new ImageIcon("src/resources/menus/timeattackhs.png");
         timehsback = timehs.getImage();
         
         g.drawImage(timehsback, 0, 0, null);
+        
+        g.setColor(new Color(0, 0, 0));
+        
+        int n=0;
+		int posY2 = 250;
+		while(data[n] != null)
+		{
+			g.drawString(data[n], 150, posY2);
+			posY2 += 30;
+			// System.out.println(data[n]);
+			n++;
+		}
 	}
 }

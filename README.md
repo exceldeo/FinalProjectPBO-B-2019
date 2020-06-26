@@ -1,2 +1,2 @@
-# tugaspbo
-tugas pbo membuat aplikasi atau game (excel,kresna,dicky)
+# Tugas PBO 2019
+Membuat aplikasi permainan atau game SNAKE (Excel, Kresna, Dicky)
